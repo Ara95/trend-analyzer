@@ -6,7 +6,13 @@ import type {
   RunContext,
   SourceAdapter,
 } from './contract.js';
-import { ALL_INDUSTRIES, type Industry } from '../config/industries.js';
+import { ALL_INDUSTRIES, INDUSTRIES, type Industry } from '../config/industries.js';
+
+function toIndustry(v: unknown): Industry {
+  return typeof v === 'string' && (INDUSTRIES as readonly string[]).includes(v)
+    ? (v as Industry)
+    : ALL_INDUSTRIES;
+}
 
 export interface TikTokDeps {
   runActor: ActorRunner;
@@ -48,7 +54,7 @@ export function createTikTokAdapter(deps: TikTokDeps): SourceAdapter {
             format: 'hashtag',
             label: String(raw.hashtagName ?? raw.name),
             country: ctx.country,
-            industry: (raw.industry as Industry) ?? ALL_INDUSTRIES,
+            industry: toIndustry(raw.industry),
             period: ctx.period,
             rank: num(raw.rank),
             rankMovement: num(raw.rankDiff),

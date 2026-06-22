@@ -52,4 +52,28 @@ describe('tiktok adapter', () => {
     await adapter.fetchTrends({ country: 'SE', period: 'month' });
     expect(received).toMatchObject({ countryCode: 'SE', period: 30 });
   });
+
+  it('falls back to industry "all" for an unknown TikTok industry', async () => {
+    const adapter = createTikTokAdapter({
+      runActor: async () => [{ type: 'hashtag', hashtagName: 'gaming', industry: 'gaming', rank: 1 }],
+      actorId: 'x',
+    });
+    const trends = await adapter.fetchTrends({ country: 'SE', period: 'week' });
+    expect(trends.find((t) => t.format === 'hashtag')?.industry).toBe('all');
+  });
+
+  it('maps the "song" type alias to audio', async () => {
+    const adapter = createTikTokAdapter({
+      runActor: async () => [{ type: 'song', title: 'Vinter', rank: 2 }], actorId: 'x',
+    });
+    const trends = await adapter.fetchTrends({ country: 'SE', period: 'week' });
+    expect(trends.find((t) => t.format === 'audio')?.label).toBe('Vinter');
+  });
+
+  it('ignores unknown item types (e.g. video, creator)', async () => {
+    const adapter = createTikTokAdapter({
+      runActor: async () => [{ type: 'video' }, { type: 'creator' }], actorId: 'x',
+    });
+    expect(await adapter.fetchTrends({ country: 'SE', period: 'week' })).toEqual([]);
+  });
 });
