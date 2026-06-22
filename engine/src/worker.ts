@@ -3,11 +3,11 @@ import { loadEnv } from './config/env.js';
 import { createSupabase } from './store/supabase.js';
 import { createApify } from './store/apify.js';
 import { listActiveAccounts } from './store/accounts.js';
-import { insertSnapshots } from './store/snapshots.js';
+import { insertSnapshots, loadRecentSnapshots } from './store/snapshots.js';
 import { upsertTrends, type SupabaseLike } from './store/trends.js';
 import { createTikTokAdapter } from './adapters/tiktok.js';
 import { createInstagramAdapter } from './adapters/instagram.js';
-import { runEngine, type EngineDeps } from './engine.js';
+import { runEngine, ingest, type EngineDeps } from './engine.js';
 
 export interface ParsedArgs {
   source: string;
@@ -55,8 +55,13 @@ async function main(): Promise<void> {
     listAccounts: (platform: Platform, country: string) =>
       listActiveAccounts(supabase as any, platform, country),
     insertSnapshots: (s) => insertSnapshots(supabase as any, s),
+    loadRecentSnapshots: (ids, days) => loadRecentSnapshots(supabase as any, ids, days),
     upsertTrends: (source, t) => upsertTrends(supabase, source, t),
   };
+
+  // Ingest raw content once per invocation (Class B only; no-op for Class A),
+  // then derive per period window from accumulated history.
+  await ingest(deps, args.source, args.country);
 
   for (const period of plannedRuns(args.source, args.period)) {
     console.log(`[worker] running ${args.source} country=${args.country} period=${period}`);

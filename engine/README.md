@@ -46,9 +46,12 @@ npm run worker -- --source=instagram --country=SE         # day + week + month
 npm run worker -- --source=instagram --country=SE --period=day
 ```
 
-The worker is a stateless CLI — drop it into cron or a Supabase scheduled function for
-periodic polling. Class B needs ≥2 snapshots of an item before a trend is derivable
-(cold start); longer windows (month) need correspondingly more history.
+The worker scrapes raw Class B content once per invocation and stores it in
+`content_snapshots`, then derives velocity per period window from the **accumulated
+snapshot history**. So Class B trends appear only after at least two runs of an account's
+reels (cold start — velocity needs ≥2 snapshots of the same reel); longer windows (month)
+need correspondingly more run history. Drop the worker into cron or a Supabase scheduled
+function for periodic polling.
 
 ## Test
 
