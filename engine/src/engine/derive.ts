@@ -9,6 +9,10 @@ import type { Industry } from '../config/industries.js';
 
 const MS_PER_DAY = 86_400_000;
 
+function maxOf(values: number[]): number {
+  return values.reduce((max, v) => (v > max ? v : max), -Infinity);
+}
+
 export interface Weights {
   likes: number;
   comments: number;
@@ -51,7 +55,7 @@ export function derive(
   if (snapshots.length === 0) return [];
 
   // Reference "now" = latest capture; window filters relative to it (deterministic).
-  const refMs = Math.max(...snapshots.map((s) => Date.parse(s.capturedAt)));
+  const refMs = maxOf(snapshots.map((s) => Date.parse(s.capturedAt)));
   const windowMs = periodWindowDays(ctx.period) * MS_PER_DAY;
   const inWindow = snapshots.filter((s) => refMs - Date.parse(s.capturedAt) <= windowMs);
 
@@ -117,7 +121,7 @@ export function derive(
       period: ctx.period,
       velocityScore: velocity,
       sampleSize: group.length,
-      sampleWindowDays: Math.max(...group.map((r) => r.windowDays)),
+      sampleWindowDays: maxOf(group.map((r) => r.windowDays)),
     });
   }
 
