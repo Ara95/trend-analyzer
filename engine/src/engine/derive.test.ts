@@ -81,4 +81,17 @@ describe('derive', () => {
     );
     expect(out).toEqual([]); // only one snapshot remains in window -> cold start
   });
+
+  it('falls back to industry "all" when the account is not in the panel map', () => {
+    const out = derive(
+      [
+        snap({ accountId: 'unknown', likes: 0, capturedAt: '2026-06-19T00:00:00.000Z' }),
+        snap({ accountId: 'unknown', likes: 10, capturedAt: '2026-06-21T00:00:00.000Z' }),
+      ],
+      new Map(),
+      { country: 'SE', period: 'week' },
+    );
+    const reel = out.find((t) => t.format === 'reel');
+    expect(reel?.industry).toBe('all');
+  });
 });
