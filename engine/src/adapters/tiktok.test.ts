@@ -1,79 +1,65 @@
 import { describe, it, expect } from 'vitest';
-import { createTikTokAdapter, periodToDays } from './tiktok.js';
+import { createTikTokAdapter } from './tiktok.js';
+import type { PanelAccount } from './contract.js';
 
-const rawHashtag = {
-  type: 'hashtag', hashtagName: 'fika', industry: 'food', rank: 1, rankDiff: 2,
-  trend: 'rising', views: 500000,
+const accounts: PanelAccount[] = [
+  { id: 'a1', handle: 'foodieswe', platform: 'tiktok', industry: 'food', country: 'SE', active: true },
+];
+
+const rawVideo = {
+  id: 'v1',
+  authorMeta: { name: 'foodieswe' },
+  text: 'recept',
+  playCount: 5000,
+  diggCount: 300,
+  commentCount: 40,
+  shareCount: 12,
+  musicMeta: { musicId: 'm1' },
+  webVideoUrl: 'https://www.tiktok.com/@foodieswe/video/v1',
 };
-const rawSound = { type: 'sound', title: 'Sommar', rank: 1, audioLink: 'http://a', usageCount: 9000 };
 
-describe('periodToDays', () => {
-  it('maps week->7 and month->30', () => {
-    expect(periodToDays('week')).toBe(7);
-    expect(periodToDays('month')).toBe(30);
-  });
-  it('throws for day (not offered by Creative Center)', () => {
-    expect(() => periodToDays('day')).toThrow(/day/);
-  });
-});
-
-describe('tiktok adapter', () => {
-  it('is a Class A trend-feed source that returns no snapshots', async () => {
-    const adapter = createTikTokAdapter({ runActor: async () => [], actorId: 'x' });
-    expect(adapter.sourceClass).toBe('trend-feed');
-    expect(await adapter.fetchSnapshots({ country: 'SE', period: 'week' })).toEqual([]);
-  });
-
-  it('maps hashtags per industry with native rank fields', async () => {
-    const adapter = createTikTokAdapter({ runActor: async () => [rawHashtag], actorId: 'x' });
-    const trends = await adapter.fetchTrends({ country: 'SE', period: 'week' });
-    const h = trends.find((t) => t.format === 'hashtag');
-    expect(h).toMatchObject({
-      platform: 'tiktok', format: 'hashtag', label: 'fika', country: 'SE',
-      industry: 'food', period: 'week', rank: 1, rankMovement: 2, direction: 'rising', views: 500000,
-    });
-  });
-
-  it('maps sounds as country-level (industry all)', async () => {
-    const adapter = createTikTokAdapter({ runActor: async () => [rawSound], actorId: 'x' });
-    const trends = await adapter.fetchTrends({ country: 'SE', period: 'week' });
-    const s = trends.find((t) => t.format === 'audio');
-    expect(s).toMatchObject({
-      platform: 'tiktok', format: 'audio', label: 'Sommar', industry: 'all', rank: 1,
-    });
-    expect(s?.metrics).toMatchObject({ audioLink: 'http://a', usageCount: 9000 });
-  });
-
-  it('passes the mapped day-count to the actor input', async () => {
-    let received: any;
+describe('tiktok adapter (Class B)', () => {
+  it('is a Class B raw-content source that returns no trends', async () => {
     const adapter = createTikTokAdapter({
-      runActor: async (_id, input) => { received = input; return []; }, actorId: 'x',
+      runActor: async () => [], listAccounts: async () => accounts, actorId: 'x',
     });
-    await adapter.fetchTrends({ country: 'SE', period: 'month' });
-    expect(received).toMatchObject({ countryCode: 'SE', period: 30 });
+    expect(adapter.sourceClass).toBe('raw-content');
+    expect(await adapter.fetchTrends({ country: 'SE', period: 'day' })).toEqual([]);
   });
 
-  it('falls back to industry "all" for an unknown TikTok industry', async () => {
+  it('maps raw videos to snapshots keyed to the panel account', async () => {
     const adapter = createTikTokAdapter({
-      runActor: async () => [{ type: 'hashtag', hashtagName: 'gaming', industry: 'gaming', rank: 1 }],
+      runActor: async () => [rawVideo], listAccounts: async () => accounts, actorId: 'x',
+    });
+    const snaps = await adapter.fetchSnapshots({ country: 'SE', period: 'day' });
+    expect(snaps).toHaveLength(1);
+    expect(snaps[0]).toMatchObject({
+      platform: 'tiktok', accountId: 'a1', externalId: 'v1', format: 'video',
+      views: 5000, likes: 300, comments: 40, shares: 12, audioId: 'm1',
+      caption: 'recept', videoUrl: 'https://www.tiktok.com/@foodieswe/video/v1',
+    });
+    expect(typeof snaps[0].capturedAt).toBe('string');
+  });
+
+  it('passes the panel handles as profiles to the actor', async () => {
+    let captured: Record<string, unknown> | null = null;
+    const adapter = createTikTokAdapter({
+      runActor: async (_id, input) => {
+        captured = input;
+        return [];
+      },
+      listAccounts: async () => accounts,
       actorId: 'x',
     });
-    const trends = await adapter.fetchTrends({ country: 'SE', period: 'week' });
-    expect(trends.find((t) => t.format === 'hashtag')?.industry).toBe('all');
+    await adapter.fetchSnapshots({ country: 'SE', period: 'day' });
+    expect(captured!.profiles).toEqual(['foodieswe']);
   });
 
-  it('maps the "song" type alias to audio', async () => {
+  it('skips videos whose author is not in the panel', async () => {
     const adapter = createTikTokAdapter({
-      runActor: async () => [{ type: 'song', title: 'Vinter', rank: 2 }], actorId: 'x',
+      runActor: async () => [{ ...rawVideo, authorMeta: { name: 'stranger' } }],
+      listAccounts: async () => accounts, actorId: 'x',
     });
-    const trends = await adapter.fetchTrends({ country: 'SE', period: 'week' });
-    expect(trends.find((t) => t.format === 'audio')?.label).toBe('Vinter');
-  });
-
-  it('ignores unknown item types (e.g. video, creator)', async () => {
-    const adapter = createTikTokAdapter({
-      runActor: async () => [{ type: 'video' }, { type: 'creator' }], actorId: 'x',
-    });
-    expect(await adapter.fetchTrends({ country: 'SE', period: 'week' })).toEqual([]);
+    expect(await adapter.fetchSnapshots({ country: 'SE', period: 'day' })).toEqual([]);
   });
 });

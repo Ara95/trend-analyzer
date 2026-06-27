@@ -1,0 +1,142 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ------------------------------------------------------------------ *
+ *  Light, minimal design system. Calm neutral surface, hairline
+ *  borders, generous whitespace. One near-black accent for active
+ *  state; muted green / red only for direction.
+ * ------------------------------------------------------------------ */
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+  --font-heading: var(--font-sans);
+  /* Display headlines share the sans face (Hanken Grotesk 700, tight tracking) — no serif. */
+  --font-display: var(--font-sans);
+
+  --color-rise: var(--rise);
+  --color-fall: var(--fall);
+  --color-signal: var(--signal);
+  --color-signal-soft: var(--signal-soft);
+
+  --color-muted-surface: var(--muted-surface);
+  --color-line: var(--line);
+  --color-ink: var(--ink);
+  --color-ink-dim: var(--ink-dim);
+  --color-ink-faint: var(--ink-faint);
+
+  /* shadcn bridge */
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+:root {
+  --radius: 0.875rem;
+
+  --ink: #17171a;          /* near-black, något varm */
+  --ink-dim: #6e6b64;
+  --ink-faint: #a5a29b;
+  --line: #eaeae6;         /* hårfin linje */
+  --muted-surface: #f4f2ee;
+
+  --rise: #5c8a4e;         /* dämpad grön */
+  --fall: #b23a2c;
+
+  /* one hot signal accent — tegel/ler "het/trend", nordiskt dämpad. Used sparingly. */
+  --signal: #c2541e;
+  --signal-soft: #f6ece3;
+
+  /* shadcn bridge → warm off-white neutral */
+  --background: #fafaf8;   /* varm off-white */
+  --foreground: #17171a;
+  --card: #ffffff;
+  --card-foreground: #17171a;
+  --popover: #ffffff;
+  --popover-foreground: #17171a;
+  --primary: #17171a;
+  --primary-foreground: #fafaf8;
+  --secondary: #f4f2ee;
+  --secondary-foreground: #17171a;
+  --muted: #f4f2ee;
+  --muted-foreground: #8a8780;
+  --accent: #f4f2ee;
+  --accent-foreground: #17171a;
+  --destructive: #b23a2c;
+  --border: #eaeae6;
+  --input: #e3e0d9;
+  --ring: #c2541e;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+    -webkit-font-smoothing: antialiased;
+  }
+  ::selection {
+    background: var(--ink);
+    color: #fff;
+  }
+}
+
+/* one subtle, calm entrance — nothing flashy */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.fade-up {
+  opacity: 0;
+  animation: fade-up 0.45s ease forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-up {
+    animation: none;
+    opacity: 1;
+  }
+}
+
+/* Hero atmosphere: a calm warm radial wash. Restraint over spectacle — light and premium,
+ * not gradient-heavy. The Nordic hero is cleaner without a texture grid. */
+.hero-wash {
+  background: radial-gradient(120% 95% at 50% -12%, #f4efe9 0%, #fafaf8 58%);
+}
+
+/* Soft signal focus ring for the search input. */
+.ring-signal:focus-within {
+  border-color: color-mix(in oklab, var(--signal) 55%, var(--line));
+  box-shadow: 0 0 0 4px var(--signal-soft);
+}

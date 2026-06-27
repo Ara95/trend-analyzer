@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<article style="display:flex;flex-direction:column;background:#FFFFFF;border:1px solid #ECEDF2;border-radius:18px;overflow:hidden;transition:transform .2s ease,box-shadow .2s ease,border-color .2s ease;height:100%;font-family:'Space Grotesk',sans-serif" style-hover="transform:translateY(-3px);box-shadow:0 20px 46px -24px rgba(40,30,120,.55);border-color:#D9D5FB">
+  <div style="position:relative;aspect-ratio:9/16;overflow:hidden;background:#EEF0F6">
+    <div style="position:absolute;inset:0;background: {{ v.posterB }}"></div>
+    <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(15,12,40,.55) 0%,rgba(15,12,40,0) 46%)"></div>
+    <span style="position:absolute;left:11px;top:11px;font-family:'JetBrains Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;background:rgba(255,255,255,.18);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);color:#fff;padding:4px 8px;border-radius:8px;border:1px solid rgba(255,255,255,.25)">{{ v.platformLabel }}</span>
+    <button style="position:absolute;right:11px;top:11px;width:32px;height:32px;border:1px solid rgba(255,255,255,.25);border-radius:10px;background:rgba(255,255,255,.16);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);color:#fff;font-size:14px;cursor:pointer;display:grid;place-items:center;transition:all .15s ease" style-hover="background:#fff;color:#5B3DF5;transform:scale(1.08)">&#9829;</button>
+    <div style="position:absolute;left:11px;bottom:13px;display:inline-flex;align-items:center;gap:5px;background:#5B3DF5;color:#fff;padding:5px 10px;border-radius:10px;font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;box-shadow:0 6px 16px -6px rgba(91,61,245,.8)"><span style="opacity:.65;font-size:9px;letter-spacing:.08em">TS</span>{{ v.scoreFmt }}</div>
+    <span style="position:absolute;right:11px;bottom:15px;font-family:'JetBrains Mono',monospace;font-size:10px;color:rgba(255,255,255,.92)">{{ v.viewsFmt }}</span>
+    <div style="position:absolute;left:0;right:0;bottom:0;height:4px;background:rgba(255,255,255,.22)"><div style="height:100%;width: {{ v.scorePct }};background:#9BE021;box-shadow:0 0 10px rgba(155,224,33,.8)"></div></div>
+  </div>
+  <div style="display:flex;flex-direction:column;gap:9px;padding:13px 14px 15px">
+    <div style="display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:10px;color:#9CA0B0">
+      <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#5B3DF5">{{ v.handle }}</span><span aria-hidden="true">&middot;</span><span>{{ v.time }}</span>
+      <sc-if value="{{ v.breakout }}" hint-placeholder-val="{{ false }}"><span style="margin-left:auto;display:inline-flex;align-items:center;gap:3px;color:#0F0C28;background:#9BE021;padding:2px 6px;border-radius:6px;font-size:9px;letter-spacing:.04em;flex-shrink:0">BREAKOUT</span></sc-if>
+    </div>
+    <p style="margin:0;font-family:'Space Grotesk',sans-serif;font-weight:500;font-size:14px;line-height:1.32;color:#14151A;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;min-height:37px">{{ v.caption }}</p>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;border-top:1px solid #F0F1F5;padding-top:10px">
+      <div><div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#14151A">{{ v.viewsFmt }}</div><div style="font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.06em;text-transform:uppercase;color:#AEB2C0;margin-top:2px">Visn.</div></div>
+      <div><div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#14151A">{{ v.likesFmt }}</div><div style="font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.06em;text-transform:uppercase;color:#AEB2C0;margin-top:2px">Likes</div></div>
+      <div><div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#14151A">{{ v.commentsFmt }}</div><div style="font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.06em;text-transform:uppercase;color:#AEB2C0;margin-top:2px">Komm.</div></div>
+      <div><div style="font-family:'JetBrains Mono',monospace;font-size:12px;color:#14151A">{{ v.sharesFmt }}</div><div style="font-family:'JetBrains Mono',monospace;font-size:8px;letter-spacing:.06em;text-transform:uppercase;color:#AEB2C0;margin-top:2px">Del.</div></div>
+    </div>
+  </div>
+</article>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:258,&quot;height&quot;:560},&quot;v&quot;:{&quot;editor&quot;:null,&quot;tsType&quot;:&quot;any&quot;}}"></script>
+</body>
+</html>

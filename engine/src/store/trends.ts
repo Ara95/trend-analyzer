@@ -10,8 +10,10 @@ export interface SupabaseLike {
   };
 }
 
+// Both platforms are now Class B (raw-content): trends are derived from raw content
+// (account velocity or content-first engagement/recency), not a native platform trend feed.
 const SOURCE_CLASS = {
-  tiktok: 'trend-feed',
+  tiktok: 'raw-content',
   instagram: 'raw-content',
 } as const;
 
@@ -38,6 +40,8 @@ export async function upsertTrends(
     velocity_score: t.velocityScore ?? null,
     sample_size: t.sampleSize ?? null,
     sample_window_days: t.sampleWindowDays ?? null,
+    trend_score: t.trendScore ?? null,
+    is_breakout: t.isBreakout ?? false,
     metrics: t.metrics ?? {},
     computed_at: computedAt,
   }));

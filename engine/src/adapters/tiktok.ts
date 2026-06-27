@@ -1,85 +1,81 @@
 import type {
   ActorRunner,
-  Direction,
-  NormalizedTrend,
-  Period,
+  ContentSnapshot,
+  PanelAccount,
   RunContext,
   SourceAdapter,
 } from './contract.js';
-import { ALL_INDUSTRIES, INDUSTRIES, type Industry } from '../config/industries.js';
-
-function toIndustry(v: unknown): Industry {
-  return typeof v === 'string' && (INDUSTRIES as readonly string[]).includes(v)
-    ? (v as Industry)
-    : ALL_INDUSTRIES;
-}
 
 export interface TikTokDeps {
   runActor: ActorRunner;
+  listAccounts: () => Promise<PanelAccount[]>;
   actorId: string;
+  // Videos to pull per profile. Caps cost on the pay-per-result content scraper.
+  resultsPerPage?: number;
 }
 
-export function periodToDays(period: Period): number {
-  if (period === 'week') return 7;
-  if (period === 'month') return 30;
-  throw new Error(`TikTok Creative Center has no 'day' window; got period='${period}'`);
+function num(v: unknown): number {
+  return typeof v === 'number' && Number.isFinite(v) ? v : 0;
 }
 
-function direction(v: unknown): Direction | undefined {
-  return v === 'rising' || v === 'falling' || v === 'stable' ? v : undefined;
+function str(v: unknown): string | undefined {
+  return typeof v === 'string' && v.length > 0 ? v : undefined;
 }
 
-function num(v: unknown): number | undefined {
-  return typeof v === 'number' && Number.isFinite(v) ? v : undefined;
-}
-
+// Class B (raw-content). TikTok has no usable per-industry trend feed for a small market like
+// Sweden: TikTok Creative Center's industry-segmented hashtag trends cover only ~27 countries and
+// SE is not among them (verified — the same 27-country list appears across independent Creative
+// Center actors, so it is TikTok's limit, not the scraper's). So, exactly like Instagram, we scrape
+// a curated panel of SE accounts' recent videos and let the engine derive velocity and the
+// classifier attribute industry. Sweden = the curated panel (accounts.country = 'SE').
 export function createTikTokAdapter(deps: TikTokDeps): SourceAdapter {
   return {
     id: 'tiktok',
     platform: 'tiktok',
-    sourceClass: 'trend-feed',
+    sourceClass: 'raw-content',
 
-    async fetchTrends(ctx: RunContext): Promise<NormalizedTrend[]> {
-      const days = periodToDays(ctx.period);
-      const items = (await deps.runActor(deps.actorId, {
-        countryCode: ctx.country,
-        period: days,
-      })) as Record<string, any>[];
-
-      const trends: NormalizedTrend[] = [];
-      for (const raw of items) {
-        if (raw.type === 'hashtag') {
-          trends.push({
-            platform: 'tiktok',
-            format: 'hashtag',
-            label: String(raw.hashtagName ?? raw.name),
-            country: ctx.country,
-            industry: toIndustry(raw.industry),
-            period: ctx.period,
-            rank: num(raw.rank),
-            rankMovement: num(raw.rankDiff),
-            direction: direction(raw.trend),
-            views: num(raw.views),
-          });
-        } else if (raw.type === 'sound' || raw.type === 'song') {
-          trends.push({
-            platform: 'tiktok',
-            format: 'audio',
-            label: String(raw.title ?? raw.name),
-            country: ctx.country,
-            industry: ALL_INDUSTRIES, // sounds are country-level only
-            period: ctx.period,
-            rank: num(raw.rank),
-            rankMovement: num(raw.rankDiff),
-            metrics: { audioLink: raw.audioLink, usageCount: raw.usageCount },
-          });
-        }
-      }
-      return trends;
+    async fetchTrends(): Promise<[]> {
+      return []; // Class B derives trends from snapshots, not here.
     },
 
-    async fetchSnapshots(): Promise<[]> {
-      return []; // Class A — pre-computed, no raw content.
+    async fetchSnapshots(_ctx: RunContext): Promise<ContentSnapshot[]> {
+      const accounts = await deps.listAccounts();
+      const byHandle = new Map(accounts.map((a) => [a.handle.toLowerCase(), a]));
+      const items = await deps.runActor(deps.actorId, {
+        profiles: accounts.map((a) => a.handle),
+        resultsPerPage: deps.resultsPerPage ?? 10,
+        profileScrapeSections: ['videos'],
+        profileSorting: 'latest',
+        excludePinnedPosts: true,
+        // No media downloads — we only need engagement metrics + caption (cheaper run).
+        shouldDownloadVideos: false,
+        shouldDownloadCovers: false,
+        shouldDownloadSubtitles: false,
+        shouldDownloadSlideshowImages: false,
+      });
+      const capturedAt = new Date().toISOString();
+      const snapshots: ContentSnapshot[] = [];
+      for (const raw of items as Record<string, any>[]) {
+        const account = byHandle.get(String(raw.authorMeta?.name ?? '').toLowerCase());
+        if (!account) continue; // not part of the curated panel
+        snapshots.push({
+          platform: 'tiktok',
+          accountId: account.id,
+          externalId: String(raw.id),
+          format: 'video',
+          views: num(raw.playCount),
+          likes: num(raw.diggCount),
+          comments: num(raw.commentCount),
+          shares: num(raw.shareCount),
+          audioId: raw.musicMeta?.musicId ? String(raw.musicMeta.musicId) : undefined,
+          capturedAt,
+          // Classification signals (defensive — actor schema varies):
+          caption: str(raw.text),
+          videoUrl: str(raw.webVideoUrl),
+          handle: account.handle,
+        });
+      }
+      return snapshots;
     },
   };
 }

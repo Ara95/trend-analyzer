@@ -8,6 +8,20 @@
   },
   "scripts": {
     "worker": "tsx src/worker.ts",
+    "collect": "tsx src/scripts/collect.ts",
+    "collect:instagram": "tsx src/scripts/collect-instagram.ts",
+    "rescore": "tsx src/scripts/rescore.ts",
+    "score:videos": "tsx src/scripts/score-videos.ts",
+    "embed:videos": "tsx src/scripts/embed-videos.ts",
+    "serve:searches": "tsx src/scripts/serve-searches.ts",
+    "probe:apidojo": "tsx src/scripts/probe-apidojo.ts",
+    "probe:flagship": "tsx src/scripts/probe-flagship.ts",
+    "probe:instagram": "tsx src/scripts/probe-instagram.ts",
+    "probe:ig-search": "tsx src/scripts/probe-ig-search.ts",
+    "probe:ig-fresh": "tsx src/scripts/probe-ig-fresh.ts",
+    "probe:fresh-search": "tsx src/scripts/probe-fresh-search.ts",
+    "discover": "tsx src/scripts/discover.ts",
+    "build:industry-vectors": "tsx src/scripts/build-industry-vectors.ts",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit"
@@ -19,6 +33,7 @@
   },
   "devDependencies": {
     "@types/node": "^20.14.0",
+    "supabase": "^2.107.0",
     "tsx": "^4.16.0",
     "typescript": "^5.5.0",
     "vitest": "^2.0.0"

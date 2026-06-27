@@ -12,8 +12,8 @@ describe('parseArgs', () => {
 });
 
 describe('plannedRuns', () => {
-  it('TikTok runs week+month (no day)', () => {
-    expect(plannedRuns('tiktok', undefined)).toEqual(['week', 'month']);
+  it('TikTok (now Class B) runs day+week+month', () => {
+    expect(plannedRuns('tiktok', undefined)).toEqual(['day', 'week', 'month']);
   });
   it('Instagram runs day+week+month', () => {
     expect(plannedRuns('instagram', undefined)).toEqual(['day', 'week', 'month']);

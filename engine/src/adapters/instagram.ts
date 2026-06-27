@@ -16,6 +16,10 @@ function num(v: unknown): number {
   return typeof v === 'number' && Number.isFinite(v) ? v : 0;
 }
 
+function str(v: unknown): string | undefined {
+  return typeof v === 'string' && v.length > 0 ? v : undefined;
+}
+
 export function createInstagramAdapter(deps: InstagramDeps): SourceAdapter {
   return {
     id: 'instagram',
@@ -48,6 +52,10 @@ export function createInstagramAdapter(deps: InstagramDeps): SourceAdapter {
           shares: num(raw.sharesCount),
           audioId: raw.musicInfo?.audio_id ? String(raw.musicInfo.audio_id) : undefined,
           capturedAt,
+          // Classification signals (defensive — actor schema varies):
+          caption: str(raw.caption),
+          videoUrl: str(raw.videoUrl),
+          handle: account.handle,
         });
       }
       return snapshots;

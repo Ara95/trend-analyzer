@@ -37,7 +37,7 @@ describe('upsertTrends', () => {
     expect(c.calls[0].opts).toEqual({ onConflict: TRENDS_CONFLICT });
     const row = c.calls[0].rows[0];
     expect(row).toMatchObject({
-      source: 'tiktok', source_class: 'trend-feed', platform: 'tiktok',
+      source: 'tiktok', source_class: 'raw-content', platform: 'tiktok',
       country: 'SE', industry: 'food', format: 'hashtag', label: '#fika',
       period: 'week', rank: 1, rank_movement: 3, direction: 'rising',
     });
