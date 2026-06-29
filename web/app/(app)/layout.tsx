@@ -1,13 +1,11 @@
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
+import { connection } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 import { SiteHeader } from "@/components/site-header";
 
-/**
- * Authenticated shell for the app surfaces (search + favoriter). The middleware already gates
- * access, but we re-check with getUser() here (revalidated, not the spoofable cookie) as the
- * source of truth for the header + a defense-in-depth redirect. Renders the shared SiteHeader.
- */
-export default async function AppLayout({ children }: { children: React.ReactNode }) {
+async function AuthShell({ children }: { children: React.ReactNode }) {
+  await connection();
   const supabase = await createClient();
   const {
     data: { user },
@@ -16,9 +14,19 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   if (!user) redirect("/login");
 
   return (
-    <div className="flex min-h-full flex-col">
+    <>
       <SiteHeader email={user.email} />
       {children}
+    </>
+  );
+}
+
+export default function AppLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="flex min-h-full flex-col">
+      <Suspense fallback={<SiteHeader />}>
+        <AuthShell>{children}</AuthShell>
+      </Suspense>
     </div>
   );
 }

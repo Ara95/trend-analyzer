@@ -2,6 +2,7 @@ import type { ActorRunner } from '../adapters/contract.js';
 import type { EngineConfig } from '../config/env.js';
 import type { ClassifyDeps } from '../classify/classify.js';
 import { runContentPipeline } from './pipeline.js';
+import { flattenReels, normalizeInstagramReels } from './instagram.js';
 
 // On-demand scrape of ONE arbitrary search term (engine step 4 / "search anything"). Reuses the whole
 // content pipeline (rank → score-signal → write the video index), just parametrized on the user's term
@@ -61,6 +62,44 @@ export async function scrapeSearchBuckets(
   return [...byId.values()];
 }
 
+// On-demand Instagram scrape for ONE term. Mirrors the TikTok path but on the keyword-CAPTION search
+// actor, which — unlike TikTok — takes NO date filter and NO geo (see content/instagram.ts): a single
+// {query, maxPages} call ranked globally by relevance. So there are no freshness tiers here; the index's
+// INDEX_MAX_AGE_DAYS prune is what bounds recency, and IG results skew older than TikTok's as a result
+// (that asymmetry is why a date-aware IG actor is worth evaluating — see the README). Reels are flattened,
+// normalized onto the shared flat shape, and folded into the SAME index tagged with `term`. The language
+// gate is OFF (allowedLanguages: []) — on-demand search is global, not the Swedish cohort `collect:instagram`
+// builds, so we keep every language and do NOT credit the query as Swedish evidence (no __searchQuery tag).
+export async function collectInstagramForQuery(
+  term: string,
+  deps: CollectForQueryDeps,
+): Promise<number> {
+  const { runActor, cfg, supabase, classifyDeps } = deps;
+  const batch = (await runActor(cfg.igSearchActorId, {
+    query: term,
+    maxPages: cfg.igMaxPages,
+  })) as Record<string, any>[];
+  const reels = flattenReels(batch ?? []);
+  const items = normalizeInstagramReels(reels);
+
+  // Visibility for "why is there no Instagram for my search": the current caption-search actor often
+  // returns FEW or ZERO reels for a term (it's relevance-ranked and term-dependent), and the index's
+  // 30-day cap then prunes most of whatever it did return. Logging actor-yield vs normalized count tells
+  // "actor returned nothing" apart from "scraped but pruned at write time" (runContentPipeline logs the
+  // final indexed count). A thrown actor error is logged separately by collectForQuery's catch.
+  console.log(`[collectForQuery] instagram "${term}": ${reels.length} reels from actor → ${items.length} normalized`);
+
+  await runContentPipeline('instagram', items, {
+    cfg,
+    supabase,
+    classifyDeps,
+    sourceQuery: term,
+    allowedLanguages: [], // global: keep every language (filter column, not an ingest gate)
+  });
+
+  return items.length;
+}
+
 export async function collectForQuery(term: string, deps: CollectForQueryDeps): Promise<number> {
   const { runActor, cfg, supabase, classifyDeps } = deps;
 
@@ -82,5 +121,16 @@ export async function collectForQuery(term: string, deps: CollectForQueryDeps): 
     allowedLanguages: [], // global: keep every language (it's a filter column, not an ingest gate)
   });
 
-  return items.length;
+  // ($) Second platform, second charge. Instagram is folded into the same index so the platform-generic
+  // web search surfaces it under this term. NON-FATAL by design: TikTok is the primary result set, so an
+  // IG actor failure (rate limit, schema drift) must degrade to TikTok-only rather than blanking the
+  // search. Sequential after TikTok to avoid concurrent upserts racing on the shared video tables.
+  let igCount = 0;
+  try {
+    igCount = await collectInstagramForQuery(term, deps);
+  } catch (err) {
+    console.error(`[collectForQuery] instagram "${term}" failed:`, (err as Error).message ?? err);
+  }
+
+  return items.length + igCount;
 }

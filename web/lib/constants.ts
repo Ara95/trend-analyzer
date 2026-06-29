@@ -84,12 +84,21 @@ export const PLATFORM_LABELS: Record<Platform, string> = {
   tiktok: "TikTok",
 };
 
+/** Brand-coded styling for the poster's platform chip, so the source reads at a glance while scrolling:
+ * Instagram's signature warm gradient (dark purple under the label → magenta → orange) vs. TikTok's
+ * flat black. The black gets a faint inset ring so its edge stays defined over dark thumbnails. */
+export const PLATFORM_BADGE: Record<Platform, string> = {
+  instagram: "bg-gradient-to-br from-[#8134af] via-[#dd2a7b] to-[#f58529] text-white",
+  tiktok: "bg-[#010101] text-white ring-1 ring-inset ring-white/20",
+};
+
 export const DEFAULT_COUNTRY = "SE";
 
 // --- Orbit search surface -------------------------------------------------
 
 export const SEARCH_SORTS: { value: SearchSort; label: string }[] = [
   { value: "trend", label: "Trend Score" },
+  { value: "outlier", label: "Mest avvikande" },
   { value: "views", label: "Visningar" },
   { value: "likes", label: "Gillningar" },
   { value: "comments", label: "Kommentarer" },
@@ -98,11 +107,23 @@ export const SEARCH_SORTS: { value: SearchSort; label: string }[] = [
   { value: "recent", label: "Senaste" },
 ];
 
-export const SEARCH_PERIODS: { value: Period | "all"; label: string }[] = [
-  { value: "all", label: "Alltid" },
-  { value: "day", label: "24h" },
-  { value: "week", label: "7 dygn" },
-  { value: "month", label: "30 dygn" },
+/** Period switcher segments (day/week/month). Rendered as a segmented control, not in the dropdown.
+ * No "all" option — under the 30-day index cap `month` already is "everything", so it's the default. */
+export const SEARCH_PERIOD_TABS: { value: Period; label: string }[] = [
+  { value: "day", label: "Senaste dygnet" },
+  { value: "week", label: "7 dagar" },
+  { value: "month", label: "30 dagar" },
+];
+
+/** Outlier-threshold pills (× the creator's own average views). 0 = show everything; higher tiers narrow
+ * to videos that broke out hardest relative to their creator — the "viral outlier" view. Mirrors
+ * OUTLIER_VALUES in lib/search-query.ts. */
+export const SEARCH_OUTLIER_TIERS: { value: number; label: string }[] = [
+  { value: 0, label: "Alla" },
+  { value: 2, label: "2× snittet" },
+  { value: 5, label: "5× snittet" },
+  { value: 10, label: "10× snittet" },
+  { value: 20, label: "20× snittet" },
 ];
 
 export const SEARCH_PLATFORMS: { value: Platform | "all"; label: string }[] = [

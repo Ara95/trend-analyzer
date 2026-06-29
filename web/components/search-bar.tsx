@@ -40,7 +40,7 @@ export function SearchBar({
       {query?.platform && query.platform !== "all" && (
         <input type="hidden" name="platform" value={query.platform} />
       )}
-      {query?.period && query.period !== "all" && (
+      {query?.period && query.period !== "month" && (
         <input type="hidden" name="period" value={query.period} />
       )}
       {query?.language && query.language !== "all" && (

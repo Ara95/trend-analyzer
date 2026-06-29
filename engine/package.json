@@ -15,6 +15,7 @@
     "embed:videos": "tsx src/scripts/embed-videos.ts",
     "serve:searches": "tsx src/scripts/serve-searches.ts",
     "probe:apidojo": "tsx src/scripts/probe-apidojo.ts",
+    "probe:apidojo-ig": "tsx src/scripts/probe-apidojo-ig.ts",
     "probe:flagship": "tsx src/scripts/probe-flagship.ts",
     "probe:instagram": "tsx src/scripts/probe-instagram.ts",
     "probe:ig-search": "tsx src/scripts/probe-ig-search.ts",

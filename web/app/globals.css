@@ -21,6 +21,7 @@
   --font-display: var(--font-sans);
 
   --color-rise: var(--rise);
+  --color-rise-soft: var(--rise-soft);
   --color-fall: var(--fall);
   --color-signal: var(--signal);
   --color-signal-soft: var(--signal-soft);
@@ -65,6 +66,7 @@
   --muted-surface: #f4f2ee;
 
   --rise: #5c8a4e;         /* dämpad grön */
+  --rise-soft: #edf3ea;    /* ljus grön bakgrund — motsvarighet till signal-soft */
   --fall: #b23a2c;
 
   /* one hot signal accent — tegel/ler "het/trend", nordiskt dämpad. Used sparingly. */
@@ -99,6 +101,9 @@
   body {
     @apply bg-background text-foreground;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-weight: 500;
   }
   ::selection {
     background: var(--ink);

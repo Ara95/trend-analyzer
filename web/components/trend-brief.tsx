@@ -19,7 +19,7 @@ export function TrendBrief({ q, items }: { q: string; items: VideoResult[] }) {
             Trendöversikt
           </p>
           <h2 className="mt-1 font-display text-lg font-bold tracking-tight text-ink">
-            Vad som driver «{q}» just nu
+            Vad som driver {q} just nu
           </h2>
         </div>
         <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-muted-surface px-2.5 py-1 text-[11px] text-ink-dim">
@@ -45,6 +45,9 @@ export function TrendBrief({ q, items }: { q: string; items: VideoResult[] }) {
             >
               {s.value}
             </span>
+            {s.hint && (
+              <span className="text-[11px] leading-tight text-ink-faint">{s.hint}</span>
+            )}
           </div>
         ))}
       </div>
@@ -60,7 +63,9 @@ export function TrendBrief({ q, items }: { q: string; items: VideoResult[] }) {
               className="inline-flex items-center gap-1.5 rounded-lg border border-line bg-card px-2.5 py-1 text-xs text-ink-dim"
             >
               {h.text}
-              <span className="font-mono font-semibold text-signal">{h.count}</span>
+              <span className="font-mono font-semibold text-signal">
+                {h.count}
+              </span>
             </span>
           ))}
         </div>

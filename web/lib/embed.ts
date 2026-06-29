@@ -4,9 +4,13 @@
  * out, so the caller degrades to lexical FTS and search keeps working without OpenAI.
  */
 
+import { cacheLife } from "next/cache";
+
 const EMBED_TIMEOUT_MS = 2500;
 
 export async function embedQuery(text: string): Promise<number[] | null> {
+  "use cache";
+  cacheLife("max"); // embedding is deterministic per model — cache indefinitely
   const key = process.env.OPENAI_API_KEY;
   const model = process.env.OPENAI_EMBED_MODEL ?? "text-embedding-3-small";
   if (!key || !text.trim()) return null;

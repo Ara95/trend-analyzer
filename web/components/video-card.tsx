@@ -1,5 +1,6 @@
+import Link from "next/link";
 import { Play } from "lucide-react";
-import { PLATFORM_LABELS } from "@/lib/constants";
+import { PLATFORM_BADGE, PLATFORM_LABELS } from "@/lib/constants";
 import { formatCompact, formatPercent, relativeTime, truncate } from "@/lib/format";
 import type { VideoResult } from "@/lib/types";
 import type { SaveItemInput } from "@/lib/collections";
@@ -17,12 +18,11 @@ function thumbnailFor(v: VideoResult): string | undefined {
   return undefined;
 }
 
-// A datadriven metric cell: value over a small uppercase mono label. Iconless, per the Nordic redesign.
 function Metric({ value, label }: { value: string; label: string }) {
   return (
-    <div>
-      <div className="font-mono text-xs tabular-nums text-ink">{value}</div>
-      <div className="mt-0.5 font-mono text-[8px] uppercase tracking-[0.06em] text-ink-faint">
+    <div className="min-w-0 overflow-hidden">
+      <div className="truncate font-mono text-[13px] font-semibold leading-none tabular-nums text-ink">{value}</div>
+      <div className="mt-0.5 truncate font-mono text-[10px] uppercase tracking-[0.06em] text-ink-dim">
         {label}
       </div>
     </div>
@@ -51,8 +51,11 @@ export function VideoCard({
   // Creator-relative outlier: how many times the creator's own average this video beats. Null until
   // engine step 2 fills outlier_ratio, so the chip hides gracefully when we can't show a real number.
   const outlier = v.outlierRatio != null ? Math.round(v.outlierRatio) : null;
-  // The signal row only earns its space when there's something to say (outlier or breakout).
-  const showSignalRow = outlier != null && outlier > 1;
+  // True view velocity (engine migration 0011) — only present once a video has ≥2 snapshots. Show it
+  // when it's a positive, real climb.
+  const velocity = v.viewsPerDay != null && v.viewsPerDay > 0 ? v.viewsPerDay : null;
+  // The signal row only earns its space when there's something to say (outlier, breakout, or velocity).
+  const showSignalRow = (outlier != null && outlier > 1) || velocity != null;
 
   // The denormalized snapshot stored when this video is saved (lib/collections SaveItemInput).
   const saveInput: SaveItemInput = {
@@ -77,12 +80,13 @@ export function VideoCard({
     : undefined;
 
   return (
-    <article className="fade-up group flex h-full flex-col overflow-hidden rounded-2xl border border-line bg-card transition-all duration-200 hover:-translate-y-0.5 hover:border-[#dcd8d1] hover:shadow-[0_16px_38px_-20px_rgba(40,35,28,0.4)]"
+    <article className="fade-up group flex h-full cursor-pointer flex-col overflow-hidden rounded-2xl border border-line bg-card [backface-visibility:hidden] [-webkit-backface-visibility:hidden] transition-[transform,box-shadow,border-color] duration-300 ease-out hover:-translate-y-[3px] hover:border-[#dcd8d1] hover:shadow-[0_16px_38px_-20px_rgba(40,35,28,0.4)]"
       style={{ animationDelay: `${delay}ms` }}
     >
-      {/* Vertical 9:16 poster — the short-form signature. The link covers only the poster image so the
-          save button (overlaid above it) stays clickable and never triggers navigation. */}
-      <div className="relative aspect-[9/16] overflow-hidden bg-muted-surface">
+      {/* 3:4 poster — a calmer frame than full 9:16 so the grid scans less elongated. object-cover keeps
+          the cover undistorted (center-framed, not squished). The link covers only the poster image so
+          the save button (overlaid above it) stays clickable and never triggers navigation. */}
+      <div className="relative aspect-[3/4] overflow-hidden bg-muted-surface">
         {/* Link layer */}
         {linkProps ? (
           <a {...linkProps} aria-label={`Öppna på ${PLATFORM_LABELS[v.platform]}`} className="absolute inset-0 block">
@@ -93,11 +97,11 @@ export function VideoCard({
         )}
 
         {/* Overlays above the link */}
-        <span className="pointer-events-none absolute left-3 top-3 z-10 rounded-md bg-white/95 px-2 py-1 font-mono text-[9px] font-medium uppercase tracking-[0.1em] text-ink shadow-sm">
+        <span className={`pointer-events-none absolute left-3 top-3 z-10 rounded-md px-2 py-1 font-mono text-[9px] font-semibold uppercase tracking-[0.1em] shadow-sm ${PLATFORM_BADGE[v.platform]}`}>
           {PLATFORM_LABELS[v.platform]}
         </span>
 
-        <div className="absolute right-3 top-3 z-10">
+        <div className="absolute right-3 top-3 z-10 flex flex-col gap-2">
           <SaveButton item={saveInput} initialSaved={saved} />
         </div>
 
@@ -123,20 +127,21 @@ export function VideoCard({
       </div>
 
       {/* Body */}
-      <div className="flex flex-1 flex-col gap-2.5 p-4">
-        <div className="flex items-center gap-1.5 overflow-hidden font-mono text-[10px] text-ink-faint">
-          <span className="tabular-nums">{String(rank).padStart(2, "0")}</span>
-          {v.creatorHandle && (
-            <>
-              <span aria-hidden>·</span>
-              <span className="truncate text-ink-dim">@{v.creatorHandle}</span>
-            </>
-          )}
+      <div className="flex flex-1 flex-col gap-2 p-3.5">
+        <div className="flex items-center justify-between gap-2 font-mono text-[11px] text-ink-faint">
+          <span className="flex items-center gap-1.5 overflow-hidden">
+            <span className="tabular-nums">{String(rank).padStart(2, "0")}</span>
+            {v.creatorHandle && (
+              <Link
+                href={`/creator/${v.platform}/${encodeURIComponent(v.creatorHandle)}`}
+                className="truncate text-ink-dim transition-colors hover:text-ink hover:underline"
+              >
+                @{v.creatorHandle}
+              </Link>
+            )}
+          </span>
           {v.postedAt && (
-            <>
-              <span aria-hidden>·</span>
-              <span className="shrink-0">{relativeTime(v.postedAt)}</span>
-            </>
+            <span className="shrink-0 tabular-nums">{relativeTime(v.postedAt)}</span>
           )}
         </div>
 
@@ -149,15 +154,24 @@ export function VideoCard({
         )}
 
         {showSignalRow && (
-          <div className="flex items-center justify-end gap-2">
-            <span className="inline-flex items-center gap-1 rounded-[7px] bg-signal-soft px-2 py-0.5 text-[11px] font-semibold text-signal">
-              <span aria-hidden>▲</span> {outlier}× snittet
-            </span>
+          <div className="flex flex-wrap items-center justify-end gap-1.5">
+            {velocity != null && (
+              <span
+                className="inline-flex items-center gap-1 rounded-[7px] bg-rise-soft px-2 py-0.5 text-[11px] font-semibold text-rise"
+                title="Visningar per dag (mätt mellan de två senaste mätpunkterna)"
+              >
+                <span aria-hidden>↗</span> +{formatCompact(velocity)}/dag
+              </span>
+            )}
+            {outlier != null && outlier > 1 && (
+              <span className="inline-flex items-center gap-1 rounded-[7px] bg-signal-soft px-2 py-0.5 text-[11px] font-semibold text-signal">
+                <span aria-hidden>▲</span> {outlier}× snittet
+              </span>
+            )}
           </div>
         )}
 
-        <div className="mt-auto grid grid-cols-4 gap-2 border-t border-line pt-3">
-          <Metric value={formatCompact(v.views)} label="Visn." />
+        <div className="mt-auto grid grid-cols-3 gap-x-1.5 gap-y-0 border-t border-[#F0EEE9] pt-2.5">
           <Metric value={formatCompact(v.likes)} label="Likes" />
           <Metric value={formatCompact(v.comments)} label="Komm." />
           <Metric value={formatCompact(v.shares)} label="Del." />
@@ -187,9 +201,9 @@ function PosterInner({ v, thumb }: { v: VideoResult; thumb?: string }) {
         </div>
       )}
 
-      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[rgba(28,24,18,0.5)] to-transparent" />
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[rgba(28,24,18,0.55)] to-transparent" />
 
-      <span className="pointer-events-none absolute bottom-[15px] right-3 font-mono text-[10px] tabular-nums text-white/90">
+      <span className="pointer-events-none absolute bottom-3 right-3 inline-flex items-center gap-1 rounded-md bg-[rgba(0,0,0,0.42)] px-1.5 py-0.5 font-mono text-[11px] font-semibold tabular-nums text-white backdrop-blur-[2px]">
         {formatCompact(v.views)} visn.
       </span>
     </>

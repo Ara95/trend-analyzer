@@ -114,7 +114,7 @@ export function SaveButton({
         onClick={toggleOpen}
         aria-label={anySaved ? "Hantera sparning" : "Spara"}
         aria-expanded={open}
-        className="inline-flex size-8 items-center justify-center rounded-full bg-white/95 text-ink shadow-sm transition-colors hover:bg-white"
+        className="inline-flex size-8 cursor-pointer items-center justify-center rounded-full bg-white/95 text-ink shadow-sm transition-[colors,transform] duration-150 hover:bg-white hover:scale-110 active:scale-95"
       >
         <Heart
           size={15}

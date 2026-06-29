@@ -46,7 +46,11 @@ export function momentum(item: TrendItem): number {
 }
 
 export function truncate(s: string, max: number): string {
-  return s.length > max ? `${s.slice(0, max - 1).trimEnd()}…` : s;
+  // Iterate by code point (Array.from), NOT by UTF-16 code unit (.slice/.length): a raw .slice can cut
+  // through the middle of a surrogate-pair emoji (🐴, 🔥, …), leaving a lone surrogate that React
+  // serializes differently on the server and the client → a hydration mismatch (the "…☀️�…" crash).
+  const chars = Array.from(s);
+  return chars.length > max ? `${chars.slice(0, max - 1).join("").trimEnd()}…` : s;
 }
 
 /**

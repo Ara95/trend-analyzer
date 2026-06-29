@@ -4,8 +4,6 @@ import { Heart } from "lucide-react";
 import { listCollections, listItems } from "@/lib/collections";
 import { VideoCard } from "@/components/video-card";
 
-export const dynamic = "force-dynamic";
-
 export const metadata: Metadata = {
   title: "Favoriter — Orbit",
 };

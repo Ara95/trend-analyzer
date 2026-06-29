@@ -1,18 +1,13 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useOptimistic, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Check, SlidersHorizontal, X } from "lucide-react";
-import {
-  SEARCH_LANGS,
-  SEARCH_PERIODS,
-  SEARCH_PLATFORMS,
-  SEARCH_SORTS,
-} from "@/lib/constants";
+import { SEARCH_LANGS, SEARCH_PLATFORMS } from "@/lib/constants";
 import { buildSearchHref } from "@/lib/search-query";
 import type { VideoSearchQuery } from "@/lib/types";
 
-type Field = "sort" | "platform" | "period" | "language";
+type Field = "platform" | "language";
 
 interface Group {
   field: Field;
@@ -22,10 +17,10 @@ interface Group {
   default: string;
 }
 
+// Sort and period are first-class controls (segmented switcher + sort pills) in SearchControls.
+// This dropdown holds only the secondary filters: platform and language.
 const GROUPS: Group[] = [
-  { field: "sort", label: "Sortering", options: SEARCH_SORTS, default: "trend" },
   { field: "platform", label: "Plattform", options: SEARCH_PLATFORMS, default: "all" },
-  { field: "period", label: "Period", options: SEARCH_PERIODS, default: "all" },
   { field: "language", label: "Språk", options: SEARCH_LANGS, default: "all" },
 ];
 
@@ -35,23 +30,40 @@ function labelFor(group: Group, value: string): string {
 
 /**
  * Command-style filter for the results view: a single "Filter" button opens a searchable dropdown
- * with grouped options (sort / platform / period / language); the active non-default filters show as
- * removable chips beside the button. Selecting an option navigates via `buildSearchHref` (the
- * established query-param pattern), so links stay shareable.
+ * with grouped options (platform / language); the active non-default filters show as removable chips
+ * beside the button. Selecting an option navigates via `buildSearchHref` (the established query-param
+ * pattern), so links stay shareable. Sort and period live outside this dropdown — see SearchControls.
  */
 export function SearchFilters({ query }: { query: VideoSearchQuery }) {
   const router = useRouter();
+  const [, startTransition] = useTransition();
   const [open, setOpen] = useState(false);
   const [text, setText] = useState("");
 
+  const [activePlatform, setActivePlatform] = useOptimistic<string, string>(
+    query.platform,
+    (_, next) => next,
+  );
+  const [activeLanguage, setActiveLanguage] = useOptimistic<string, string>(
+    query.language,
+    (_, next) => next,
+  );
+
+  const optimisticQuery = { ...query, platform: activePlatform, language: activeLanguage };
+
   const active = useMemo(
-    () => GROUPS.filter((g) => String(query[g.field]) !== g.default),
-    [query],
+    () => GROUPS.filter((g) => String(optimisticQuery[g.field]) !== g.default),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [activePlatform, activeLanguage],
   );
 
   function go(field: Field, value: string) {
-    router.push(buildSearchHref(query, { [field]: value } as Partial<VideoSearchQuery>), {
-      scroll: false,
+    startTransition(() => {
+      if (field === "platform") setActivePlatform(value);
+      if (field === "language") setActiveLanguage(value);
+      router.push(buildSearchHref(query, { [field]: value } as Partial<VideoSearchQuery>), {
+        scroll: false,
+      });
     });
     setOpen(false);
     setText("");
@@ -108,7 +120,7 @@ export function SearchFilters({ query }: { query: VideoSearchQuery }) {
                         {g.label}
                       </p>
                       {opts.map((o) => {
-                        const selected = String(query[g.field]) === o.value;
+                        const selected = String(optimisticQuery[g.field]) === o.value;
                         return (
                           <button
                             key={o.value}
@@ -137,7 +149,7 @@ export function SearchFilters({ query }: { query: VideoSearchQuery }) {
           onClick={() => go(g.field, g.default)}
           className="inline-flex items-center gap-1.5 rounded-full border border-line bg-signal-soft px-3 py-1 text-xs text-signal transition-colors hover:border-signal/30"
         >
-          {labelFor(g, String(query[g.field]))}
+          {labelFor(g, String(optimisticQuery[g.field]))}
           <X size={12} />
         </button>
       ))}

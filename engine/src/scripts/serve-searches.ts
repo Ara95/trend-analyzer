@@ -83,7 +83,7 @@ async function processOne(
       })
       .eq('id', row.id);
     console.log(
-      `[serve:searches] "${row.query}" ready — ${count} scraped, ${score.breakouts} breakout, top z=${score.topTrendScore.toFixed(2)}`,
+      `[serve:searches] "${row.query}" ready — ${count} scraped, ${score.breakouts} breakout, ${score.velocities} with velocity, top z=${score.topTrendScore.toFixed(2)}`,
     );
   } catch (err) {
     const message = (err as Error).message ?? String(err);

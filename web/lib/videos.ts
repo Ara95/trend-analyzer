@@ -1,4 +1,5 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { cacheLife } from "next/cache";
 import type { SearchSort, VideoResult, VideoSearchQuery, VideoSearchResult } from "./types";
 import { embedQuery } from "./embed";
 
@@ -20,6 +21,14 @@ const RESULT_LIMIT = 60;
 // (matches the engine's INDEX_MAX_AGE_DAYS so the cap holds end to end). "all" period = exactly this.
 const MAX_AGE_DAYS = 30;
 const PERIOD_DAYS: Record<string, number> = { day: 1, week: 7, month: 30 };
+
+// Explicit column list — omits embedding (vector(1536) ~6 KB/row × 60 rows), caption_tsv, and
+// ingest-housekeeping columns (audio_id, bookmarks, first_seen_at, last_scraped_at) that mapRow
+// doesn't use.
+const VIDEO_COLS =
+  "id, platform, platform_video_id, creator_handle, caption, hashtags, url, thumbnail_url, " +
+  "posted_at, language, duration_seconds, views, likes, comments, shares, " +
+  "engagement_rate, trend_score, outlier_ratio, is_breakout, views_per_day, views_growth_pct";
 
 function client(): SupabaseClient | null {
   const url = process.env.SUPABASE_URL;
@@ -59,6 +68,8 @@ function mapRow(row: Record<string, unknown>): VideoResult {
     trendScore: row.trend_score == null ? undefined : Number(row.trend_score),
     outlierRatio: row.outlier_ratio == null ? undefined : Number(row.outlier_ratio),
     isBreakout: Boolean(row.is_breakout),
+    viewsPerDay: row.views_per_day == null ? undefined : Number(row.views_per_day),
+    viewsGrowthPct: row.views_growth_pct == null ? undefined : Number(row.views_growth_pct),
   };
 }
 
@@ -72,6 +83,10 @@ interface Sortable<T> {
 }
 function applySort<T extends Sortable<T>>(q: T, sort: SearchSort): T {
   switch (sort) {
+    case "outlier":
+      return q
+        .order("outlier_ratio", { ascending: false, nullsFirst: false })
+        .order("views", { ascending: false });
     case "views":
       return q.order("views", { ascending: false });
     case "likes":
@@ -98,14 +113,15 @@ async function browse(
   query: VideoSearchQuery,
   signal: AbortSignal,
 ): Promise<VideoResult[]> {
-  let q = supabase.from("videos").select("*").abortSignal(signal);
+  let q = supabase.from("videos").select(VIDEO_COLS).abortSignal(signal);
   if (query.platform !== "all") q = q.eq("platform", query.platform);
   if (query.language !== "all") q = q.eq("language", query.language);
+  if (query.minOutlier > 0) q = q.gte("outlier_ratio", query.minOutlier); // breakouts only (drops null/unscored)
   q = q.gte("posted_at", sinceFor(query.period)); // always age-capped (see sinceFor)
 
   const { data, error } = await applySort(q, query.sort).limit(RESULT_LIMIT);
   if (error || !data) return [];
-  return data.map(mapRow);
+  return (data as unknown as Record<string, unknown>[]).map(mapRow);
 }
 
 // Lexical FTS — query present, ordered by the chosen sort (defaults to trend_score). Serves two roles:
@@ -120,16 +136,17 @@ async function lexical(
 ): Promise<VideoResult[]> {
   let q = supabase
     .from("videos")
-    .select("*")
+    .select(VIDEO_COLS)
     .abortSignal(signal)
     .textSearch("caption_tsv", query.q, { type: "websearch", config: "simple" });
   if (query.platform !== "all") q = q.eq("platform", query.platform);
   if (query.language !== "all") q = q.eq("language", query.language);
+  if (query.minOutlier > 0) q = q.gte("outlier_ratio", query.minOutlier); // breakouts only (drops null/unscored)
   q = q.gte("posted_at", sinceFor(query.period)); // always age-capped (see sinceFor)
 
   const { data, error } = await applySort(q, query.sort).limit(RESULT_LIMIT);
   if (error || !data) return [];
-  return data.map(mapRow);
+  return (data as unknown as Record<string, unknown>[]).map(mapRow);
 }
 
 // Hybrid — embed the query and let the RRF RPC blend FTS + vector. Falls back to lexical on any miss.
@@ -150,12 +167,23 @@ async function hybrid(
       since: sinceFor(query.period),
       max_results: RESULT_LIMIT,
     })
+    .select(VIDEO_COLS)
     .abortSignal(signal);
   if (error || !data) return lexical(supabase, query, signal);
-  return (data as Record<string, unknown>[]).map(mapRow);
+  const items = (data as unknown as Record<string, unknown>[]).map(mapRow);
+  // The RRF RPC has no outlier param, so apply the threshold here. Post-filtering can yield <RESULT_LIMIT
+  // rows — acceptable for an outlier view (you want fewer, higher-signal results), and only the relevance
+  // sort (trend) takes this path; the metric sorts push the filter down into the DB query.
+  return query.minOutlier > 0
+    ? items.filter((v) => (v.outlierRatio ?? 0) >= query.minOutlier)
+    : items;
 }
 
 export async function searchVideos(query: VideoSearchQuery): Promise<VideoSearchResult> {
+  "use cache";
+  // 60s server revalidation — period switches hit cache on repeat, first switch per combination is fresh.
+  // stale: 30s ensures the client router doesn't serve stale content too long.
+  cacheLife({ stale: 30, revalidate: 60, expire: 600 });
   const supabase = client();
   if (!supabase) return { items: [], query, empty: true };
 

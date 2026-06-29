@@ -54,6 +54,12 @@ export interface VideoEmbeddingUpdate {
   embedding: number[];
 }
 
+export interface VideoVelocityUpdate {
+  id: string;
+  viewsPerDay: number;
+  growthPct: number;
+}
+
 export interface CreatorRecord {
   platform: string;
   handle: string;
@@ -212,6 +218,28 @@ export async function pruneVideos(client: VideoDeleteClient, maxAgeDays: number)
   const { error, count } = await client.from('videos').delete({ count: 'exact' }).lt('posted_at', cutoff);
   if (error) throw new Error(`pruneVideos failed: ${error.message}`);
   return count ?? 0;
+}
+
+// Write true view velocity onto the index (migration 0011). viewsPerDay / views_growth_pct are derived
+// from a video's two most recent snapshots (content/velocity.ts); velocity_updated_at stamps the run.
+// One UPDATE per video by id, mirroring updateVideoScores — only the velocity columns are touched, so
+// metrics, content, and step-2 scoring set elsewhere are untouched.
+export async function updateVideoVelocities(
+  client: VideoUpdateClient,
+  rows: VideoVelocityUpdate[],
+): Promise<void> {
+  const updatedAt = new Date().toISOString();
+  for (const r of rows) {
+    const { error } = await client
+      .from('videos')
+      .update({
+        views_per_day: r.viewsPerDay,
+        views_growth_pct: r.growthPct,
+        velocity_updated_at: updatedAt,
+      })
+      .eq('id', r.id);
+    if (error) throw new Error(`updateVideoVelocities failed for ${r.id}: ${error.message}`);
+  }
 }
 
 // Write caption embeddings onto the index (engine step 2b). The vector is sent as its TEXT literal

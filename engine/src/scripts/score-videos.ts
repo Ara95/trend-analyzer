@@ -22,7 +22,7 @@ async function main(): Promise<void> {
   }
   console.log(
     `[score:videos] scored ${r.scored} video(s) over ${windowDays}d, ${r.baselines} creator baseline(s), ` +
-      `${r.breakouts} breakout (z>=${cfg.trendBreakoutZ} or >=12x) | top trendScore=${r.topTrendScore.toFixed(2)}`,
+      `${r.breakouts} breakout (z>=${cfg.trendBreakoutZ} or >=12x), ${r.velocities} with velocity | top trendScore=${r.topTrendScore.toFixed(2)}`,
   );
 }
 
