@@ -1,4 +1,4 @@
-import 'dotenv/config';
+import '../config/load-dotenv.js';
 import { loadEnv } from '../config/env.js';
 import { createApify } from '../store/apify.js';
 

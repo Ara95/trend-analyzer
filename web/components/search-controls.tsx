@@ -111,7 +111,7 @@ export function SearchControls({
               className={cn(
                 "rounded-full border px-3 py-1 text-xs transition-colors",
                 active
-                  ? "border-signal bg-signal-soft text-signal"
+                  ? "border-[#ecdccb] bg-signal-soft text-signal-deep"
                   : "border-line bg-card text-ink-dim hover:border-ink/20 hover:text-ink",
               )}
             >
@@ -140,7 +140,7 @@ export function SearchControls({
               className={cn(
                 "rounded-full border px-3 py-1 text-xs transition-colors",
                 active
-                  ? "border-signal bg-signal-soft text-signal"
+                  ? "border-[#ecdccb] bg-signal-soft text-signal-deep"
                   : "border-line bg-card text-ink-dim hover:border-ink/20 hover:text-ink",
               )}
             >

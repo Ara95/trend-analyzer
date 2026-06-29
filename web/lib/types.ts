@@ -127,8 +127,6 @@ export interface VideoResult {
   shares: number;
   /** (likes+comments+shares)/views, 0..1. Computed at ingest. */
   engagementRate?: number;
-  /** Populated by engine step 2 (creator-relative outlier). Null until then. */
-  trendScore?: number;
   outlierRatio?: number;
   isBreakout: boolean;
   /** True view velocity (migration 0011): views/day between the two most recent snapshots. Null until a

@@ -99,7 +99,6 @@ export async function saveItem(collectionId: string, item: SaveItemInput): Promi
       comments: item.comments,
       shares: item.shares,
       engagement_rate: item.engagementRate ?? null,
-      trend_score: item.trendScore ?? null,
       is_breakout: item.isBreakout,
       posted_at: item.postedAt ?? null,
     },

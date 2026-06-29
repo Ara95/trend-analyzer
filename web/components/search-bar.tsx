@@ -10,10 +10,13 @@ export function SearchBar({
   query,
   size = "lg",
   autoFocus = false,
+  accent = false,
 }: {
   query?: VideoSearchQuery;
   size?: "lg" | "sm";
   autoFocus?: boolean;
+  /** Hero treatment: Ember search icon + a soft drop shadow under the field. */
+  accent?: boolean;
 }) {
   const lg = size === "lg";
   return (
@@ -21,11 +24,15 @@ export function SearchBar({
       action="/search"
       method="get"
       role="search"
-      className={`ring-signal flex items-center gap-2 rounded-2xl border border-line bg-white transition-shadow ${
+      className={`ring-signal flex items-center gap-2 rounded-2xl border border-input bg-white transition-shadow ${
         lg ? "px-4 py-3 sm:px-5 sm:py-4" : "px-3.5 py-2.5"
-      }`}
+      } ${accent ? "shadow-[0_18px_44px_-20px_rgba(60,45,30,0.3)]" : ""}`}
     >
-      <Search size={lg ? 20 : 16} className="shrink-0 text-ink-faint" aria-hidden />
+      <Search
+        size={lg ? 20 : 16}
+        className={`shrink-0 ${accent ? "text-signal" : "text-ink-faint"}`}
+        aria-hidden
+      />
       <input
         name="q"
         defaultValue={query?.q ?? ""}

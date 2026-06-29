@@ -15,6 +15,8 @@ export interface BriefStat {
   value: string;
   /** When set, render the value in the signal accent (a positive/heat reading). */
   accent?: boolean;
+  /** Directional color: "up" → rise green, "down" → fall red. Takes precedence over accent. */
+  direction?: "up" | "down";
   /** Optional sub-line under the value — e.g. the quantified basis of a momentum reading. */
   hint?: string;
 }
@@ -24,9 +26,13 @@ export interface TrendBrief {
   count: number;
   stats: BriefStat[];
   hooks: { text: string; count: number }[];
+  /**
+   * A real 14-day posting-cadence series: how many of the returned videos were posted on each of the
+   * last 14 days (oldest → newest). Feeds the momentum tile's area graph. Null when too few videos
+   * carry timestamps to draw an honest curve — the tile then renders without a graph.
+   */
+  momentumSeries: number[] | null;
 }
-
-const scoreFmt = new Intl.NumberFormat("sv-SE", { maximumFractionDigits: 1 });
 
 function pad(n: number): string {
   return String(n).padStart(2, "0");
@@ -57,7 +63,7 @@ const MIN_PER_BAND = 3;
 function lifecycleSignal(
   items: VideoResult[],
   nowMs: number,
-): { value: string; accent: boolean; hint: string } | null {
+): { value: string; accent: boolean; direction?: "up" | "down"; hint: string } | null {
   const fresh: number[] = []; // age ≤ 3d
   const old: number[] = []; // age > 10d
   for (const v of items) {
@@ -74,10 +80,10 @@ function lifecycleSignal(
   if (mo <= 0) return null;
   const pct = Math.round((mf / mo - 1) * 100);
   if (mf / mo >= 1.15) {
-    return { value: "Accelererar ▲", accent: true, hint: `färska videor +${pct}% engagemang` };
+    return { value: "Accelererar", accent: true, direction: "up" as const, hint: `färska videor +${pct}% engagemang` };
   }
   if (mf / mo <= 0.85) {
-    return { value: "Mättas ▼", accent: false, hint: `färska videor ${pct}% engagemang` };
+    return { value: "Mättas", accent: false, direction: "down" as const, hint: `färska videor ${pct}% engagemang` };
   }
   return { value: "Stabilt", accent: false, hint: "jämnt färska vs äldre" };
 }
@@ -98,6 +104,27 @@ function bestWindow(items: VideoResult[]): string | null {
   let peak = 0;
   for (let h = 1; h < 24; h++) if (byHour[h] > byHour[peak]) peak = h;
   return `${pad(peak)}–${pad((peak + 2) % 24)}`;
+}
+
+// A real 14-day posting-cadence curve: count of the returned videos by posting day (oldest →
+// newest). Drives the momentum tile's area graph. Needs enough dated videos to be meaningful;
+// returns null otherwise so the graph is omitted rather than drawn from thin data.
+const MOMENTUM_DAYS = 14;
+const MOMENTUM_MIN_DATED = 6;
+
+function momentumSeries(items: VideoResult[], nowMs: number): number[] | null {
+  const buckets = new Array<number>(MOMENTUM_DAYS).fill(0);
+  let dated = 0;
+  for (const v of items) {
+    if (!v.postedAt) continue;
+    const t = Date.parse(v.postedAt);
+    if (Number.isNaN(t)) continue;
+    const ageDays = Math.floor((nowMs - t) / DAY_MS);
+    if (ageDays < 0 || ageDays >= MOMENTUM_DAYS) continue;
+    buckets[MOMENTUM_DAYS - 1 - ageDays] += 1;
+    dated++;
+  }
+  return dated >= MOMENTUM_MIN_DATED ? buckets : null;
 }
 
 // Hooks the data can actually see: caption-pattern matches with real per-video counts. v1 stand-in
@@ -133,6 +160,7 @@ export function summarizeSearch(q: string, items: VideoResult[]): TrendBrief {
       label: "Momentum",
       value: lifecycle.value,
       accent: lifecycle.accent,
+      direction: lifecycle.direction,
       hint: lifecycle.hint,
     });
   } else {
@@ -142,11 +170,11 @@ export function summarizeSearch(q: string, items: VideoResult[]): TrendBrief {
     const ratio = items.length ? hot / items.length : 0;
     const momentum =
       ratio >= 0.25
-        ? { value: "Stigande ▲", accent: true }
+        ? { value: "Stigande", accent: true }
         : ratio >= 0.1
           ? { value: "Stabil", accent: false }
           : { value: "Lugnt", accent: false };
-    stats.push({ label: "Momentum", value: momentum.value, accent: momentum.accent });
+    stats.push({ label: "Momentum", value: momentum.value, accent: momentum.accent, direction: momentum.accent ? "up" as const : undefined });
   }
 
   // Real view-growth velocity (engine migration 0011), surfaced once enough videos in the set have a
@@ -161,15 +189,9 @@ export function summarizeSearch(q: string, items: VideoResult[]): TrendBrief {
       label: "Median tillväxt",
       value: `${med >= 0 ? "+" : ""}${Math.round(med)}%`,
       accent: med > 0,
+      direction: med > 0 ? "up" : med < 0 ? "down" : undefined,
       hint: `${withGrowth.length} videor med mäthistorik`,
     });
-  }
-
-  // Average Trend Score across the scored videos.
-  const scored = items.filter((v) => v.trendScore != null);
-  if (scored.length) {
-    const avg = scored.reduce((s, v) => s + (v.trendScore ?? 0), 0) / scored.length;
-    stats.push({ label: "Snitt Trend Score", value: `${scoreFmt.format(avg)} / 10` });
   }
 
   // Breakouts in the set.
@@ -189,7 +211,13 @@ export function summarizeSearch(q: string, items: VideoResult[]): TrendBrief {
 
   // Best posting window.
   const win = bestWindow(items);
-  if (win) stats.push({ label: "Bästa tid", value: win });
+  if (win) stats.push({ label: "Bästa publiceringstid", value: win });
 
-  return { q, count: items.length, stats, hooks: deriveHooks(items) };
+  return {
+    q,
+    count: items.length,
+    stats,
+    hooks: deriveHooks(items),
+    momentumSeries: momentumSeries(items, Date.now()),
+  };
 }

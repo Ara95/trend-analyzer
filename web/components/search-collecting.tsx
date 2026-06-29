@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { OrbitMotif } from "@/components/orbit-mark";
 
 /**
  * Shown while the engine worker is scraping a freshly-searched term. Polls the route (router.refresh
@@ -29,7 +30,7 @@ export function SearchCollecting({ hasResults }: { hasResults: boolean }) {
 
   if (hasResults) {
     return (
-      <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-line bg-signal-soft px-3 py-1.5 text-xs text-ink-dim">
+      <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-[#ecdccb] bg-signal-soft px-3.5 py-1.5 text-xs text-ink-dim">
         <Spinner />
         Uppdaterar med färska trender…
       </div>
@@ -38,21 +39,39 @@ export function SearchCollecting({ hasResults }: { hasResults: boolean }) {
 
   return (
     <div
-      className="rounded-2xl border border-line px-6 py-16 text-center"
+      className="relative overflow-hidden rounded-2xl border border-[#ecdccb] px-6 py-16 text-center"
       style={{
-        background: "radial-gradient(120% 100% at 50% 0%, #fbf2eb, #fcfaf7 70%)",
+        background: "radial-gradient(120% 100% at 50% 0%, #f6ece0 0%, #fcfaf6 70%)",
       }}
     >
-      <div className="mx-auto flex size-10 items-center justify-center">
-        <Spinner large />
+      {/* Faint orbiting motif behind the copy — the loading mood. */}
+      <OrbitMotif
+        animated
+        className="pointer-events-none absolute left-1/2 top-1/2 size-72 -translate-x-1/2 -translate-y-1/2 opacity-40"
+      />
+      <div className="relative">
+        <div className="mx-auto flex size-10 items-center justify-center">
+          <Spinner large />
+        </div>
+        <p className="mt-4 font-display text-[22px] font-bold tracking-[-0.02em] text-ink">
+          Samlar in färska trender…
+        </p>
+        <p className="mx-auto mt-2.5 max-w-md text-sm text-muted-foreground">
+          Första gången någon söker på det här hämtar vi de mest framgångsrika videorna live. Det tar
+          oftast 30 sekunder till någon minut.
+        </p>
+        <div className="mt-4 flex items-center justify-center gap-2 font-mono text-[11px] text-ink-faint">
+          <span>TikTok</span>
+          <span aria-hidden>·</span>
+          <span>Reels</span>
+          {secs > 5 && (
+            <>
+              <span aria-hidden>·</span>
+              <span className="text-signal tabular-nums">{secs}s</span>
+            </>
+          )}
+        </div>
       </div>
-      <p className="mt-4 font-display text-[22px] font-bold tracking-tight text-ink">
-        Samlar in färska trender…
-      </p>
-      <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
-        Första gången någon söker på det här hämtar vi de mest framgångsrika videorna live. Det tar
-        oftast 30 sekunder till någon minut{secs > 5 ? ` · ${secs}s` : ""}.
-      </p>
     </div>
   );
 }

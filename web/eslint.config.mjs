@@ -14,6 +14,7 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // Design handoff: HTML mockups + their runtime support.js — reference only, not app code.
     "handoff/**",
+    "design_handoff_premium_lyft/**",
   ]),
 ]);
 

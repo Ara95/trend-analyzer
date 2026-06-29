@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Search } from "lucide-react";
 import { connection } from "next/server";
 import { parseSearchQuery, buildSearchHref, type SearchParams } from "@/lib/search-query";
 import { searchVideos } from "@/lib/videos";
@@ -27,11 +28,14 @@ function ResultsEmpty({ query }: { query: VideoSearchQuery }) {
   // is dead. Link clears just the outlier filter, keeping the term + other filters.
   if (query.minOutlier > 0) {
     return (
-      <div className="rounded-2xl border border-dashed border-line bg-muted-surface/40 px-6 py-16 text-center">
-        <p className="font-display text-2xl font-bold tracking-tight text-ink">
+      <div className="rounded-2xl border border-dashed border-[#d5cfc2] bg-[#fbfaf6] px-6 py-16 text-center">
+        <div className="mx-auto grid size-12 place-items-center rounded-[14px] bg-muted">
+          <Search size={22} className="text-ink-faint" />
+        </div>
+        <p className="mt-4 font-display text-2xl font-bold tracking-[-0.02em] text-ink">
           Inga videor över {query.minOutlier}× snittet
         </p>
-        <p className="mx-auto mt-3 max-w-md text-sm text-muted-foreground">
+        <p className="mx-auto mt-2.5 max-w-md text-sm text-muted-foreground">
           Avvikelse-filtret visar bara videor som slår sin kreatörs egen snittnivå minst {query.minOutlier}×.
           Få kreatörer har tillräckligt med historik i indexet för det. Sänk tröskeln eller sortera på{" "}
           <span className="font-medium text-ink">Mest avvikande</span> istället.
@@ -55,9 +59,14 @@ function ResultsEmpty({ query }: { query: VideoSearchQuery }) {
   }
 
   return (
-    <div className="rounded-2xl border border-dashed border-line bg-muted-surface/40 px-6 py-16 text-center">
-      <p className="font-display text-3xl font-bold tracking-tight text-ink">Inga träffar ännu</p>
-      <p className="mx-auto mt-3 max-w-md text-sm text-muted-foreground">
+    <div className="rounded-2xl border border-dashed border-[#d5cfc2] bg-[#fbfaf6] px-6 py-16 text-center">
+      <div className="mx-auto grid size-12 place-items-center rounded-[14px] bg-muted">
+        <Search size={22} className="text-ink-faint" />
+      </div>
+      <p className="mt-4 font-display text-2xl font-bold tracking-[-0.02em] text-ink">
+        Inga träffar ännu
+      </p>
+      <p className="mx-auto mt-2.5 max-w-md text-sm text-muted-foreground">
         Vi hittade inga videor för{" "}
         <span className="font-medium text-ink">{query.q}</span>. Prova ett bredare ämne
         eller andra filter — eller fyll videoindexet genom att köra en insamling.

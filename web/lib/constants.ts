@@ -97,7 +97,7 @@ export const DEFAULT_COUNTRY = "SE";
 // --- Orbit search surface -------------------------------------------------
 
 export const SEARCH_SORTS: { value: SearchSort; label: string }[] = [
-  { value: "trend", label: "Trend Score" },
+  { value: "trend", label: "Relevans" },
   { value: "outlier", label: "Mest avvikande" },
   { value: "views", label: "Visningar" },
   { value: "likes", label: "Gillningar" },

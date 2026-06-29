@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700;800&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  body { font-family:'Schibsted Grotesk',system-ui,sans-serif; -webkit-font-smoothing:antialiased; }
+  @keyframes orbspin { to { transform: rotate(360deg); } }
+  @keyframes orbsat { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+</style>
+</helmet>
+
+<!-- ============ COVER ============ -->
+<div id="f-cover" style="position:absolute;left:60px;top:60px;width:1280px">
+  <div data-drags-parent="1" style="font-family:'Geist Mono',monospace;font-size:12px;letter-spacing:.04em;color:#8C8676;margin-bottom:12px;cursor:grab;display:inline-block">ORBIT &middot; DESIGNSYSTEM</div>
+  <div style="background:radial-gradient(125% 130% at 12% -10%,#F4ECE0 0%,#FAF8F3 55%);border:1px solid #E6E1D7;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden;padding:52px 56px">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:40px">
+      <div style="max-width:680px">
+        <span style="display:inline-flex;align-items:center;gap:11px">
+          <svg width="34" height="34" viewBox="0 0 40 40"><ellipse cx="20" cy="20" rx="17" ry="8" fill="none" stroke="#1A1713" stroke-width="2" transform="rotate(-28 20 20)"></ellipse><circle cx="20" cy="20" r="4.5" fill="#1A1713"></circle><circle cx="33.5" cy="12.6" r="3.4" fill="#A8501E"></circle></svg>
+          <span style="font-size:30px;font-weight:700;letter-spacing:-.03em;color:#1A1713">Orbit</span>
+        </span>
+        <h1 style="font-size:46px;font-weight:700;line-height:1.05;letter-spacing:-.03em;color:#1A1713;margin:22px 0 0">Designsystem &amp; premium-lyft</h1>
+        <p style="font-size:17px;line-height:1.55;color:#6A6359;margin:16px 0 0">Ett lugnt, ljust och självsäkert system för nordiska kreatörer, byråer och content-team. Editoriell typografi, varma neutraler, en enda förfinad accent &mdash; och datadriven precision lånad från det bästa hos verktyg som Virlo, fast utan brus.</p>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:24px">
+          <span style="font-family:'Geist Mono',monospace;font-size:11px;color:#6A6359;background:#fff;border:1px solid #E6E1D7;border-radius:8px;padding:7px 12px">Schibsted Grotesk</span>
+          <span style="font-family:'Geist Mono',monospace;font-size:11px;color:#6A6359;background:#fff;border:1px solid #E6E1D7;border-radius:8px;padding:7px 12px">Geist Mono</span>
+          <span style="font-family:'Geist Mono',monospace;font-size:11px;color:#8A4218;background:#F4E8DE;border:1px solid #ECDCCB;border-radius:8px;padding:7px 12px">Ember #A8501E</span>
+          <span style="font-family:'Geist Mono',monospace;font-size:11px;color:#6A6359;background:#fff;border:1px solid #E6E1D7;border-radius:8px;padding:7px 12px">Warm cream #FAF8F3</span>
+        </div>
+      </div>
+      <div style="flex-shrink:0;display:flex;flex-direction:column;gap:10px;width:300px">
+        <div style="background:#fff;border:1px solid #E6E1D7;border-radius:14px;padding:16px 18px">
+          <div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#A39C8E">I detta dokument</div>
+          <div style="display:flex;flex-direction:column;gap:7px;margin-top:12px;font-size:14px;color:#1A1713">
+            <span style="display:flex;justify-content:space-between"><span>01 &nbsp;Grunder</span><span style="color:#A39C8E;font-family:'Geist Mono',monospace;font-size:11px">märke · färg · typ</span></span>
+            <span style="display:flex;justify-content:space-between"><span>02 &nbsp;Komponenter</span><span style="color:#A39C8E;font-family:'Geist Mono',monospace;font-size:11px">UI-kit</span></span>
+            <span style="display:flex;justify-content:space-between"><span>03 &nbsp;Skärmar</span><span style="color:#A39C8E;font-family:'Geist Mono',monospace;font-size:11px">7 vyer</span></span>
+          </div>
+        </div>
+        <div style="background:#1A1713;color:#FAF8F3;border-radius:14px;padding:16px 18px">
+          <div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#A39C8E">Princip</div>
+          <p style="font-size:14px;line-height:1.45;margin:10px 0 0;color:#EDE7DC">Tusen nej för varje ja. Data ska kännas lugn, inte skrika.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ BRAND / WORDMARK ============ -->
+<div id="f-brand" style="position:absolute;left:60px;top:680px;width:620px">
+  <div data-drags-parent="1" style="font-family:'Geist Mono',monospace;font-size:12px;color:#8C8676;margin-bottom:12px;cursor:grab;display:inline-block">01 &middot; MÄRKE &amp; MOTIV</div>
+  <div style="background:#FAF8F3;border:1px solid #E6E1D7;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden;padding:30px 32px">
+    <div style="display:flex;align-items:center;gap:14px;padding-bottom:26px;border-bottom:1px solid #E6E1D7">
+      <svg width="46" height="46" viewBox="0 0 40 40"><ellipse cx="20" cy="20" rx="17" ry="8" fill="none" stroke="#1A1713" stroke-width="2" transform="rotate(-28 20 20)"></ellipse><circle cx="20" cy="20" r="4.5" fill="#1A1713"></circle><circle cx="33.5" cy="12.6" r="3.4" fill="#A8501E"></circle></svg>
+      <span style="font-size:40px;font-weight:700;letter-spacing:-.035em;color:#1A1713">Orbit</span>
+    </div>
+    <p style="font-size:13.5px;line-height:1.5;color:#6A6359;margin:18px 0 0">Märket är en <strong style="color:#1A1713">omloppsbana</strong>: en lutad ring (banan), en kärna (ämnet) och en satellit i Ember (idén som stiger). Satelliten är den enda färgade detaljen &mdash; samma roll som accenten i hela appen.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:22px">
+      <div style="border:1px solid #E6E1D7;border-radius:12px;background:#fff;padding:18px;text-align:center">
+        <div style="font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#A39C8E;margin-bottom:14px">Symbol</div>
+        <svg width="40" height="40" viewBox="0 0 40 40" style="display:inline-block"><ellipse cx="20" cy="20" rx="17" ry="8" fill="none" stroke="#1A1713" stroke-width="2" transform="rotate(-28 20 20)"></ellipse><circle cx="20" cy="20" r="4.5" fill="#1A1713"></circle><circle cx="33.5" cy="12.6" r="3.4" fill="#A8501E"></circle></svg>
+      </div>
+      <div style="border:1px solid #1A1713;border-radius:12px;background:#1A1713;padding:18px;text-align:center">
+        <div style="font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#8C8676;margin-bottom:14px">På mörkt</div>
+        <svg width="40" height="40" viewBox="0 0 40 40" style="display:inline-block"><ellipse cx="20" cy="20" rx="17" ry="8" fill="none" stroke="#FAF8F3" stroke-width="2" transform="rotate(-28 20 20)"></ellipse><circle cx="20" cy="20" r="4.5" fill="#FAF8F3"></circle><circle cx="33.5" cy="12.6" r="3.4" fill="#D4843F"></circle></svg>
+      </div>
+    </div>
+    <div style="display:flex;align-items:center;gap:16px;margin-top:14px;border:1px solid #E6E1D7;border-radius:12px;background:#fff;padding:16px 18px">
+      <span style="display:inline-flex;align-items:center;gap:6px;font-size:15px;font-weight:700;letter-spacing:-.02em;color:#1A1713">Orbit<span style="width:5px;height:5px;border-radius:999px;background:#A8501E;display:inline-block"></span></span>
+      <span style="width:1px;height:20px;background:#E6E1D7"></span>
+      <span style="display:inline-flex;align-items:center;gap:7px;font-size:20px;font-weight:700;letter-spacing:-.02em;color:#1A1713">Orbit<span style="width:6px;height:6px;border-radius:999px;background:#A8501E;display:inline-block"></span></span>
+      <span style="width:1px;height:20px;background:#E6E1D7"></span>
+      <span style="display:inline-flex;align-items:center;gap:9px;font-size:28px;font-weight:700;letter-spacing:-.025em;color:#1A1713">Orbit<span style="width:8px;height:8px;border-radius:999px;background:#A8501E;display:inline-block"></span></span>
+      <span style="margin-left:auto;font-family:'Geist Mono',monospace;font-size:10px;color:#A39C8E">prick-lockup</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============ COLOR ============ -->
+<div id="f-color" style="position:absolute;left:720px;top:680px;width:620px">
+  <div data-drags-parent="1" style="font-family:'Geist Mono',monospace;font-size:12px;color:#8C8676;margin-bottom:12px;cursor:grab;display:inline-block">01 &middot; FÄRG</div>
+  <div style="background:#FAF8F3;border:1px solid #E6E1D7;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden;padding:30px 32px">
+    <div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#A39C8E">Bläck &amp; ytor</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px">
+      <div><div style="height:60px;border-radius:10px;background:#1A1713;border:1px solid #E6E1D7"></div><div style="font-size:12px;font-weight:600;color:#1A1713;margin-top:7px">Ink</div><div style="font-family:'Geist Mono',monospace;font-size:10px;color:#A39C8E">#1A1713</div></div>
+      <div><div style="height:60px;border-radius:10px;background:#6A6359;border:1px solid #E6E1D7"></div><div style="font-size:12px;font-weight:600;color:#1A1713;margin-top:7px">Ink dim</div><div style="font-family:'Geist Mono',monospace;font-size:10px;color:#A39C8E">#6A6359</div></div>
+      <div><div style="height:60px;border-radius:10px;background:#A39C8E;border:1px solid #E6E1D7"></div><div style="font-size:12px;font-weight:600;color:#1A1713;margin-top:7px">Ink faint</div><div style="font-family:'Geist Mono',monospace;font-size:10px;color:#A39C8E">#A39C8E</div></div>
+      <div><div style="height:60px;border-radius:10px;background:#E6E1D7;border:1px solid #DCD5C8"></div><div style="font-size:12px;font-weight:600;color:#1A1713;margin-top:7px">Linje</div><div style="font-family:'Geist Mono',monospace;font-size:10px;color:#A39C8E">#E6E1D7</div></div>
+      <div><div style="height:60px;border-radius:10px;background:#F1EEE7;border:1px solid #E6E1D7"></div><div style="font-size:12px;font-weight:600;color:#1A1713;margin-top:7px">Yta</div><div style="font-family:'Geist Mono',monospace;font-size:10px;color:#A39C8E">#F1EEE7</div></div>
+      <div><div style="height:60px;border-radius:10px;background:#FAF8F3;border:1px solid #E6E1D7"></div><div style="font-size:12px;font-weight:600;color:#1A1713;margin-top:7px">Bakgrund</div><div style="font-family:'Geist Mono',monospace;font-size:10px;color:#A39C8E">#FAF8F3</div></div>
+      <div><div style="height:60px;border-radius:10px;background:#FFFFFF;border:1px solid #E6E1D7"></div><div style="font-size:12px;font-weight:600;color:#1A1713;margin-top:7px">Kort</div><div style="font-family:'Geist Mono',monospace;font-size:10px;color:#A39C8E">#FFFFFF</div></div>
+      <div><div style="height:60px;border-radius:10px;background:linear-gradient(150deg,#E6D2BE,#B07A4A);border:1px solid #E6E1D7"></div><div style="font-size:12px;font-weight:600;color:#1A1713;margin-top:7px">Avatar</div><div style="font-family:'Geist Mono',monospace;font-size:10px;color:#A39C8E">gradient</div></div>
+    </div>
+    <div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#A39C8E;margin-top:22px">Accent &amp; status</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:12px">
+      <div><div style="height:60px;border-radius:10px;background:#A8501E"></div><div style="font-size:12px;font-weight:600;color:#1A1713;margin-top:7px">Ember</div><div style="font-family:'Geist Mono',monospace;font-size:10px;color:#A39C8E">#A8501E</div></div>
+      <div><div style="height:60px;border-radius:10px;background:#F4E8DE;border:1px solid #ECDCCB"></div><div style="font-size:12px;font-weight:600;color:#1A1713;margin-top:7px">Ember soft</div><div style="font-family:'Geist Mono',monospace;font-size:10px;color:#A39C8E">#F4E8DE</div></div>
+      <div><div style="height:60px;border-radius:10px;background:#547F4A"></div><div style="font-size:12px;font-weight:600;color:#1A1713;margin-top:7px">Stiger</div><div style="font-family:'Geist Mono',monospace;font-size:10px;color:#A39C8E">#547F4A</div></div>
+      <div><div style="height:60px;border-radius:10px;background:#A6473E"></div><div style="font-size:12px;font-weight:600;color:#1A1713;margin-top:7px">Faller</div><div style="font-family:'Geist Mono',monospace;font-size:10px;color:#A39C8E">#A6473E</div></div>
+    </div>
+    <div style="margin-top:22px;border-top:1px solid #E6E1D7;padding-top:16px">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <span style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#A39C8E">Alternativa accenter</span>
+        <span style="font-family:'Geist Mono',monospace;font-size:10px;color:#A39C8E">Ember = vald</span>
+      </div>
+      <div style="display:flex;gap:10px;margin-top:12px">
+        <div style="flex:1;text-align:center"><div style="height:34px;border-radius:8px;background:#A8501E;outline:2px solid #1A1713;outline-offset:2px"></div><div style="font-size:11px;color:#1A1713;margin-top:9px;font-weight:600">Ember</div></div>
+        <div style="flex:1;text-align:center"><div style="height:34px;border-radius:8px;background:#9E6B2E"></div><div style="font-size:11px;color:#6A6359;margin-top:9px">Ockra</div></div>
+        <div style="flex:1;text-align:center"><div style="height:34px;border-radius:8px;background:#7A2E33"></div><div style="font-size:11px;color:#6A6359;margin-top:9px">Claret</div></div>
+        <div style="flex:1;text-align:center"><div style="height:34px;border-radius:8px;background:#1F5450"></div><div style="font-size:11px;color:#6A6359;margin-top:9px">Petrol</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TYPOGRAPHY ============ -->
+<div id="f-type" style="position:absolute;left:60px;top:1320px;width:820px">
+  <div data-drags-parent="1" style="font-family:'Geist Mono',monospace;font-size:12px;color:#8C8676;margin-bottom:12px;cursor:grab;display:inline-block">01 &middot; TYPOGRAFI</div>
+  <div style="background:#FAF8F3;border:1px solid #E6E1D7;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden;padding:30px 34px">
+    <div style="display:flex;gap:14px;margin-bottom:24px">
+      <div style="flex:1;border:1px solid #E6E1D7;border-radius:12px;background:#fff;padding:18px">
+        <div style="font-size:44px;font-weight:700;letter-spacing:-.02em;color:#1A1713;line-height:1">Aa</div>
+        <div style="font-size:15px;font-weight:600;color:#1A1713;margin-top:14px">Schibsted Grotesk</div>
+        <div style="font-size:12.5px;color:#6A6359;margin-top:4px">Rubriker &amp; brödtext. Nordisk, editoriell, varm. Vikter 400/500/600/700.</div>
+        <div style="font-family:'Schibsted Grotesk';font-size:13px;color:#A39C8E;margin-top:10px;letter-spacing:.02em">ABCDEFGHIJKLM &middot; åäö 0123456789</div>
+      </div>
+      <div style="flex:1;border:1px solid #E6E1D7;border-radius:12px;background:#fff;padding:18px">
+        <div style="font-family:'Geist Mono',monospace;font-size:40px;font-weight:500;color:#1A1713;line-height:1">9.2</div>
+        <div style="font-size:15px;font-weight:600;color:#1A1713;margin-top:14px">Geist Mono</div>
+        <div style="font-size:12.5px;color:#6A6359;margin-top:4px">Trend Score, metrik, etiketter, kod. Versal med vidgad spärr. Vikter 400/500/600.</div>
+        <div style="font-family:'Geist Mono',monospace;font-size:12px;color:#A39C8E;margin-top:10px;letter-spacing:.06em">TS · 2.4M · 07–09 · +38%</div>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:0">
+      <div style="display:flex;align-items:baseline;gap:16px;padding:13px 0;border-top:1px solid #EEE9DF">
+        <span style="font-family:'Geist Mono',monospace;font-size:10px;color:#A39C8E;width:120px;flex-shrink:0">Display / 46</span>
+        <span style="font-size:46px;font-weight:700;letter-spacing:-.03em;color:#1A1713;line-height:1.05">Innan den toppar</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:16px;padding:13px 0;border-top:1px solid #EEE9DF">
+        <span style="font-family:'Geist Mono',monospace;font-size:10px;color:#A39C8E;width:120px;flex-shrink:0">Rubrik / 30</span>
+        <span style="font-size:30px;font-weight:700;letter-spacing:-.02em;color:#1A1713">Vad som driver morgonrutin</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:16px;padding:13px 0;border-top:1px solid #EEE9DF">
+        <span style="font-family:'Geist Mono',monospace;font-size:10px;color:#A39C8E;width:120px;flex-shrink:0">Underrubrik / 19</span>
+        <span style="font-size:19px;font-weight:600;letter-spacing:-.01em;color:#1A1713">Toppvideor den här veckan</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:16px;padding:13px 0;border-top:1px solid #EEE9DF">
+        <span style="font-family:'Geist Mono',monospace;font-size:10px;color:#A39C8E;width:120px;flex-shrink:0">Brödtext / 15</span>
+        <span style="font-size:15px;font-weight:400;color:#6A6359">Sök ett ämne och få de starkaste videorna, rankade efter Trend Score.</span>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:16px;padding:13px 0;border-top:1px solid #EEE9DF">
+        <span style="font-family:'Geist Mono',monospace;font-size:10px;color:#A39C8E;width:120px;flex-shrink:0">Mono-etikett / 10</span>
+        <span style="font-family:'Geist Mono',monospace;font-size:10px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:#A39C8E">Trendöversikt · uppdaterad nyss</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ ICONOGRAPHY / MOTIF ============ -->
+<div id="f-icon" style="position:absolute;left:920px;top:1320px;width:420px">
+  <div data-drags-parent="1" style="font-family:'Geist Mono',monospace;font-size:12px;color:#8C8676;margin-bottom:12px;cursor:grab;display:inline-block">01 &middot; IKONOGRAFI</div>
+  <div style="background:#FAF8F3;border:1px solid #E6E1D7;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden;padding:30px 28px">
+    <div style="font-size:13.5px;line-height:1.5;color:#6A6359">Hårfina streckikoner, 1,8&ndash;2&nbsp;px, rundade ändar. Lugna och funktionella &mdash; aldrig dekorativa.</div>
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:20px">
+      <div style="border:1px solid #E6E1D7;border-radius:12px;background:#fff;aspect-ratio:1;display:grid;place-items:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1A1713" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line></svg></div>
+      <div style="border:1px solid #E6E1D7;border-radius:12px;background:#fff;aspect-ratio:1;display:grid;place-items:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1A1713" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"></circle><circle cx="17" cy="9" r="2.4"></circle><path d="M3.5 19c0-2.8 2.5-4.5 5.5-4.5s5.5 1.7 5.5 4.5"></path></svg></div>
+      <div style="border:1px solid #E6E1D7;border-radius:12px;background:#fff;aspect-ratio:1;display:grid;place-items:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1A1713" stroke-width="2" stroke-linecap="round"><line x1="4" y1="8" x2="20" y2="8"></line><line x1="4" y1="16" x2="20" y2="16"></line><circle cx="9" cy="8" r="2.4" fill="#fff"></circle><circle cx="15" cy="16" r="2.4" fill="#fff"></circle></svg></div>
+      <div style="border:1px solid #E6E1D7;border-radius:12px;background:#fff;aspect-ratio:1;display:grid;place-items:center"><svg width="20" height="20" viewBox="0 0 24 24" fill="#1A1713"><polygon points="7,5 19,12 7,19"></polygon></svg></div>
+      <div style="border:1px solid #E6E1D7;border-radius:12px;background:#fff;aspect-ratio:1;display:grid;place-items:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#A8501E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4,16 10,9 14,13 20,5"></polyline><polyline points="15,5 20,5 20,10"></polyline></svg></div>
+      <div style="border:1px solid #E6E1D7;border-radius:12px;background:#fff;aspect-ratio:1;display:grid;place-items:center"><span style="color:#1A1713;font-size:18px">&#9829;</span></div>
+      <div style="border:1px solid #E6E1D7;border-radius:12px;background:#fff;aspect-ratio:1;display:grid;place-items:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1A1713" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg></div>
+      <div style="border:1px solid #E6E1D7;border-radius:12px;background:#fff;aspect-ratio:1;display:grid;place-items:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1A1713" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><polyline points="12,7 12,12 15.5,14" fill="none"></polyline></svg></div>
+    </div>
+    <div style="margin-top:22px;border-top:1px solid #E6E1D7;padding-top:18px">
+      <div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#A39C8E;margin-bottom:14px">Motiv &mdash; omloppsbanan</div>
+      <div style="display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid #E6E1D7;border-radius:12px;background:radial-gradient(120% 120% at 50% 0%,#F4ECE0,#fff 70%);padding:24px">
+        <svg width="120" height="120" viewBox="0 0 120 120">
+          <ellipse cx="60" cy="60" rx="50" ry="22" fill="none" stroke="#E0D8C9" stroke-width="1.5" transform="rotate(-28 60 60)"></ellipse>
+          <ellipse cx="60" cy="60" rx="34" ry="15" fill="none" stroke="#EBE4D7" stroke-width="1.5" transform="rotate(-28 60 60)"></ellipse>
+          <circle cx="60" cy="60" r="9" fill="#1A1713"></circle>
+          <g style="transform-origin:60px 60px;animation:orbsat 9s linear infinite"><circle cx="100" cy="38" r="5" fill="#A8501E"></circle></g>
+        </svg>
+      </div>
+      <p style="font-size:12px;line-height:1.5;color:#A39C8E;margin:12px 0 0">Banan kan användas som bakgrundsmotiv, laddnings-spinner och tom-tillstånd &mdash; alltid svagt, aldrig i förgrunden.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ COMPONENTS CATALOG ============ -->
+<div id="f-components" style="position:absolute;left:60px;top:2000px;width:1280px">
+  <div data-drags-parent="1" style="font-family:'Geist Mono',monospace;font-size:12px;color:#8C8676;margin-bottom:12px;cursor:grab;display:inline-block">02 &middot; KOMPONENTER</div>
+  <div style="background:#FAF8F3;border:1px solid #E6E1D7;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden;padding:30px 32px">
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+
+      <!-- Knappar -->
+      <div style="border:1px solid #E6E1D7;border-radius:14px;background:#fff;padding:20px">
+        <div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#A39C8E;margin-bottom:16px">Knappar</div>
+        <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-start">
+          <button style="background:#1A1713;color:#FAF8F3;border:none;border-radius:11px;padding:11px 18px;font-size:14px;font-weight:500;font-family:inherit;cursor:pointer">Spara kreatör</button>
+          <button style="background:#A8501E;color:#fff;border:none;border-radius:11px;padding:11px 18px;font-size:14px;font-weight:500;font-family:inherit;cursor:pointer">Använd filter</button>
+          <button style="background:#fff;color:#1A1713;border:1px solid #E0DACE;border-radius:11px;padding:11px 18px;font-size:14px;font-weight:500;font-family:inherit;cursor:pointer">Följ</button>
+          <button style="background:transparent;color:#6A6359;border:none;border-radius:11px;padding:9px 10px;font-size:14px;font-weight:500;font-family:inherit;cursor:pointer">Rensa allt</button>
+        </div>
+      </div>
+
+      <!-- Chips & pills -->
+      <div style="border:1px solid #E6E1D7;border-radius:14px;background:#fff;padding:20px">
+        <div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#A39C8E;margin-bottom:16px">Chips &amp; pills</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px">
+          <button style="display:inline-flex;align-items:center;gap:8px;border:1px solid #E0DACE;background:#fff;border-radius:10px;padding:8px 13px;font-size:13px;color:#1A1713;cursor:pointer;font-family:inherit"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="8" x2="20" y2="8"></line><line x1="4" y1="16" x2="20" y2="16"></line><circle cx="9" cy="8" r="2.4" fill="#fff"></circle><circle cx="15" cy="16" r="2.4" fill="#fff"></circle></svg>Filter <span style="background:#1A1713;color:#fff;border-radius:6px;min-width:17px;height:17px;display:inline-grid;place-items:center;font-family:'Geist Mono',monospace;font-size:10px;padding:0 4px">2</span></button>
+          <span style="display:inline-flex;align-items:center;gap:7px;background:#F4E8DE;color:#8A4218;border:1px solid #ECDCCB;border-radius:10px;padding:7px 12px;font-size:13px;font-weight:500">Trend Score <span style="cursor:pointer;opacity:.55">&times;</span></span>
+          <span style="display:inline-flex;align-items:center;gap:7px;background:#fff;color:#6A6359;border:1px solid #E0DACE;border-radius:10px;padding:7px 12px;font-size:13px">30 dagar <span style="cursor:pointer;opacity:.45">&times;</span></span>
+          <span style="background:#fff;border:1px solid #E0DACE;border-radius:999px;padding:6px 13px;font-size:13px;color:#6A6359">morgonrutin</span>
+          <span style="display:inline-flex;align-items:center;gap:7px;background:#1A1713;color:#fff;border-radius:999px;padding:6px 13px;font-size:13px;font-weight:500">Alla <span style="font-family:'Geist Mono',monospace;font-size:11px;opacity:.6">24</span></span>
+        </div>
+      </div>
+
+      <!-- Inputs -->
+      <div style="border:1px solid #E6E1D7;border-radius:14px;background:#fff;padding:20px">
+        <div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#A39C8E;margin-bottom:16px">Inmatning</div>
+        <div style="display:flex;align-items:center;gap:10px;background:#FAF8F3;border:1px solid #E0DACE;border-radius:11px;padding:10px 14px">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#A39C8E" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line></svg>
+          <span style="flex:1;font-size:14px;color:#A39C8E">Sök ett ämne…</span>
+          <span style="font-family:'Geist Mono',monospace;font-size:11px;color:#8C8676;background:#F1EEE7;border-radius:5px;padding:2px 7px">/</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;background:#fff;border:1px solid #A8501E;border-radius:11px;padding:10px 14px;box-shadow:0 0 0 4px #F4E8DE;margin-top:10px">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#A8501E" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line></svg>
+          <span style="flex:1;font-size:14px;color:#1A1713">morgonrutin<span style="display:inline-block;width:1.5px;height:15px;background:#A8501E;margin-left:1px;vertical-align:-2px"></span></span>
+        </div>
+        <div style="font-family:'Geist Mono',monospace;font-size:10px;color:#A39C8E;margin-top:10px">vila &middot; fokus (ember-ring)</div>
+      </div>
+
+      <!-- Badges & signaler -->
+      <div style="border:1px solid #E6E1D7;border-radius:14px;background:#fff;padding:20px">
+        <div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#A39C8E;margin-bottom:16px">Märken &amp; signaler</div>
+        <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+          <span style="font-family:'Geist Mono',monospace;font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;background:#1A1713;color:#fff;padding:5px 9px;border-radius:7px">TikTok</span>
+          <span style="font-family:'Geist Mono',monospace;font-size:9px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;background:#F1EEE7;color:#6A6359;border:1px solid #E0DACE;padding:5px 9px;border-radius:7px">Reels</span>
+          <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:#8A4218;background:#F4E8DE;border-radius:8px;padding:4px 9px">&#9650; 8× snittet</span>
+          <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:#3F6037;background:#E9EFE4;border-radius:8px;padding:4px 9px">&#8599; +240K/dag</span>
+          <span style="display:inline-flex;align-items:center;gap:6px;font-family:'Geist Mono',monospace;font-size:11px;color:#3F6037;background:#E9EFE4;border-radius:999px;padding:5px 11px"><span style="width:6px;height:6px;border-radius:999px;background:#547F4A;display:inline-block"></span>Uppdaterad nyss</span>
+          <span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;color:#fff;background:#A8501E;border-radius:8px;padding:4px 9px">Breakout</span>
+        </div>
+      </div>
+
+      <!-- Score & data-viz -->
+      <div style="border:1px solid #E6E1D7;border-radius:14px;background:#fff;padding:20px">
+        <div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#A39C8E;margin-bottom:16px">Trend Score &amp; viz</div>
+        <div style="display:flex;align-items:center;gap:18px">
+          <div style="position:relative;width:84px;height:84px;flex-shrink:0">
+            <svg width="84" height="84" viewBox="0 0 84 84" style="transform:rotate(-90deg)">
+              <circle cx="42" cy="42" r="36" fill="none" stroke="#EDE6DA" stroke-width="7"></circle>
+              <circle cx="42" cy="42" r="36" fill="none" stroke="#A8501E" stroke-width="7" stroke-linecap="round" stroke-dasharray="208 226"></circle>
+            </svg>
+            <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center"><span style="font-family:'Geist Mono',monospace;font-size:22px;font-weight:600;color:#1A1713;line-height:1">9.2</span><span style="font-family:'Geist Mono',monospace;font-size:8px;letter-spacing:.1em;color:#A39C8E">/ 10</span></div>
+          </div>
+          <div style="flex:1">
+            <div style="font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.08em;color:#A39C8E;margin-bottom:6px">TEMPO</div>
+            <svg width="100%" height="32" viewBox="0 0 160 32" preserveAspectRatio="none" style="display:block"><polygon points="0,28 26,24 52,26 78,16 104,18 130,8 160,3 160,32 0,32" fill="#A8501E" fill-opacity="0.08"></polygon><polyline points="0,28 26,24 52,26 78,16 104,18 130,8 160,3" fill="none" stroke="#A8501E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline></svg>
+            <div style="display:flex;align-items:center;gap:6px;margin-top:8px"><svg width="40" height="14" viewBox="0 0 40 14" fill="none"><polyline points="2,12 10,10 18,7 26,8 34,3" stroke="#A8501E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></polyline></svg><span style="font-family:'Geist Mono',monospace;font-size:9px;color:#A39C8E">sparkline 40×14</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stat-tile & factor bars -->
+      <div style="border:1px solid #E6E1D7;border-radius:14px;background:#fff;padding:20px">
+        <div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#A39C8E;margin-bottom:16px">Stat-tile &amp; faktorer</div>
+        <div style="display:flex;border:1px solid #EEE9DF;border-radius:10px;overflow:hidden;margin-bottom:16px">
+          <div style="flex:1;padding:11px 14px"><div style="font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#A39C8E">Momentum</div><div style="font-size:18px;font-weight:700;color:#1A1713;margin-top:5px">Stigande</div><div style="font-size:11px;font-weight:600;color:#A8501E;margin-top:2px">&#9650; +38%</div></div>
+          <div style="flex:1;padding:11px 14px;border-left:1px solid #EEE9DF"><div style="font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.08em;text-transform:uppercase;color:#A39C8E">Snitt TS</div><div style="font-size:18px;font-weight:700;color:#1A1713;margin-top:5px">8.4</div><div style="font-size:11px;color:#A39C8E;margin-top:2px">/ 10</div></div>
+        </div>
+        <sc-for list="{{ factors }}" as="f" hint-placeholder-count="2">
+          <div style="margin-bottom:11px">
+            <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:5px"><span style="font-size:12.5px;color:#1A1713;font-weight:500">{{ f.name }}</span><span style="font-family:'Geist Mono',monospace;font-size:10px;color:#A39C8E">{{ f.weight }}</span></div>
+            <div style="height:7px;background:#EFEBE2;border-radius:999px;overflow:hidden"><div style="height:100%;width: {{ f.barPct }};background:#A8501E;border-radius:999px"></div></div>
+          </div>
+        </sc-for>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- ============ ELEVATION / RADIUS / SPACING ============ -->
+<div id="f-tokens" style="position:absolute;left:60px;top:2720px;width:1280px">
+  <div data-drags-parent="1" style="font-family:'Geist Mono',monospace;font-size:12px;color:#8C8676;margin-bottom:12px;cursor:grab;display:inline-block">02 &middot; ELEVATION · RADIE · SPACING</div>
+  <div style="background:#FAF8F3;border:1px solid #E6E1D7;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden;padding:30px 32px">
+    <div style="display:grid;grid-template-columns:1.3fr 1fr 1fr;gap:16px">
+      <div>
+        <div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#A39C8E;margin-bottom:16px">Elevation</div>
+        <div style="display:flex;gap:14px">
+          <div style="flex:1;text-align:center"><div style="height:74px;border-radius:14px;background:#fff;border:1px solid #EEE9DF;box-shadow:0 1px 2px rgba(40,33,24,.05)"></div><div style="font-size:12px;color:#1A1713;margin-top:10px;font-weight:500">Vila</div><div style="font-family:'Geist Mono',monospace;font-size:9px;color:#A39C8E">kort</div></div>
+          <div style="flex:1;text-align:center"><div style="height:74px;border-radius:14px;background:#fff;box-shadow:0 16px 38px -20px rgba(46,37,26,.42)"></div><div style="font-size:12px;color:#1A1713;margin-top:10px;font-weight:500">Hover</div><div style="font-family:'Geist Mono',monospace;font-size:9px;color:#A39C8E">lyft</div></div>
+          <div style="flex:1;text-align:center"><div style="height:74px;border-radius:14px;background:#fff;box-shadow:0 24px 54px -22px rgba(46,37,26,.4)"></div><div style="font-size:12px;color:#1A1713;margin-top:10px;font-weight:500">Popover</div><div style="font-family:'Geist Mono',monospace;font-size:9px;color:#A39C8E">flytande</div></div>
+        </div>
+      </div>
+      <div>
+        <div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#A39C8E;margin-bottom:16px">Radie</div>
+        <div style="display:flex;flex-direction:column;gap:9px">
+          <div style="display:flex;align-items:center;gap:12px"><div style="width:42px;height:30px;background:#F1EEE7;border:1px solid #E0DACE;border-radius:8px"></div><span style="font-size:12.5px;color:#1A1713">Chip <span style="font-family:'Geist Mono',monospace;font-size:10px;color:#A39C8E">8px</span></span></div>
+          <div style="display:flex;align-items:center;gap:12px"><div style="width:42px;height:30px;background:#F1EEE7;border:1px solid #E0DACE;border-radius:11px"></div><span style="font-size:12.5px;color:#1A1713">Input/knapp <span style="font-family:'Geist Mono',monospace;font-size:10px;color:#A39C8E">11px</span></span></div>
+          <div style="display:flex;align-items:center;gap:12px"><div style="width:42px;height:30px;background:#F1EEE7;border:1px solid #E0DACE;border-radius:16px"></div><span style="font-size:12.5px;color:#1A1713">Kort/panel <span style="font-family:'Geist Mono',monospace;font-size:10px;color:#A39C8E">16px</span></span></div>
+          <div style="display:flex;align-items:center;gap:12px"><div style="width:42px;height:30px;background:#F1EEE7;border:1px solid #E0DACE;border-radius:999px"></div><span style="font-size:12.5px;color:#1A1713">Pill <span style="font-family:'Geist Mono',monospace;font-size:10px;color:#A39C8E">999px</span></span></div>
+        </div>
+      </div>
+      <div>
+        <div style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#A39C8E;margin-bottom:16px">Spacing &mdash; 4px-skala</div>
+        <div style="display:flex;align-items:flex-end;gap:9px">
+          <div style="text-align:center"><div style="width:8px;height:8px;background:#A8501E;border-radius:2px;margin:0 auto"></div><div style="font-family:'Geist Mono',monospace;font-size:9px;color:#A39C8E;margin-top:8px">8</div></div>
+          <div style="text-align:center"><div style="width:12px;height:12px;background:#A8501E;border-radius:2px;margin:0 auto"></div><div style="font-family:'Geist Mono',monospace;font-size:9px;color:#A39C8E;margin-top:8px">12</div></div>
+          <div style="text-align:center"><div style="width:16px;height:16px;background:#A8501E;border-radius:3px;margin:0 auto"></div><div style="font-family:'Geist Mono',monospace;font-size:9px;color:#A39C8E;margin-top:8px">16</div></div>
+          <div style="text-align:center"><div style="width:24px;height:24px;background:#A8501E;border-radius:3px;margin:0 auto"></div><div style="font-family:'Geist Mono',monospace;font-size:9px;color:#A39C8E;margin-top:8px">24</div></div>
+          <div style="text-align:center"><div style="width:32px;height:32px;background:#A8501E;border-radius:4px;margin:0 auto"></div><div style="font-family:'Geist Mono',monospace;font-size:9px;color:#A39C8E;margin-top:8px">32</div></div>
+        </div>
+        <p style="font-size:11.5px;line-height:1.5;color:#A39C8E;margin:16px 0 0">Generös luft. Sektioner andas på 24&ndash;32&nbsp;px, innehåll på 12&ndash;16.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ HERO ============ -->
+<div id="f-hero" style="position:absolute;left:60px;top:3120px;width:1280px">
+  <div data-drags-parent="1" style="font-family:'Geist Mono',monospace;font-size:12px;color:#8C8676;margin-bottom:12px;cursor:grab;display:inline-block">03 &middot; SKÄRM — LANDNING</div>
+  <div style="background:#FAF8F3;border:1px solid #E6E1D7;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:16px 30px;border-bottom:1px solid #E6E1D7;background:rgba(250,248,243,.9)">
+      <span style="display:inline-flex;align-items:center;gap:9px"><svg width="24" height="24" viewBox="0 0 40 40"><ellipse cx="20" cy="20" rx="17" ry="8" fill="none" stroke="#1A1713" stroke-width="2.4" transform="rotate(-28 20 20)"></ellipse><circle cx="20" cy="20" r="4.5" fill="#1A1713"></circle><circle cx="33.5" cy="12.6" r="3.4" fill="#A8501E"></circle></svg><span style="font-size:20px;font-weight:700;letter-spacing:-.025em;color:#1A1713">Orbit</span></span>
+      <div style="display:flex;align-items:center;gap:6px;font-size:14px;color:#6A6359">
+        <span style="display:inline-flex;align-items:center;gap:6px;color:#1A1713;font-weight:500;background:#F1EEE7;border-radius:9px;padding:7px 12px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line></svg>Sök</span>
+        <span style="display:inline-flex;align-items:center;gap:6px;padding:7px 12px">Favoriter</span>
+        <span style="width:1px;height:18px;background:#E6E1D7;margin:0 6px"></span>
+        <span style="width:30px;height:30px;border-radius:999px;background:linear-gradient(150deg,#E6D2BE,#B07A4A);color:#fff;display:grid;place-items:center;font-size:13px;font-weight:600">L</span>
+      </div>
+    </div>
+    <div style="position:relative;text-align:center;padding:70px 40px 30px;background:radial-gradient(120% 95% at 50% -12%,#F4ECE0 0%,#FAF8F3 58%);overflow:hidden">
+      <svg width="360" height="360" viewBox="0 0 360 360" style="position:absolute;right:-70px;top:-70px;opacity:.5"><ellipse cx="180" cy="180" rx="150" ry="66" fill="none" stroke="#E7DECF" stroke-width="1.5" transform="rotate(-28 180 180)"></ellipse><ellipse cx="180" cy="180" rx="104" ry="46" fill="none" stroke="#EEE7DA" stroke-width="1.5" transform="rotate(-28 180 180)"></ellipse></svg>
+      <p style="position:relative;font-family:'Geist Mono',monospace;font-size:12px;letter-spacing:.24em;text-transform:uppercase;color:#A8501E;margin:0">Inspirationssök för kreatörer</p>
+      <h1 style="position:relative;font-size:54px;font-weight:700;line-height:1.06;letter-spacing:-.03em;color:#1A1713;margin:18px auto 0;max-width:700px">Hitta nästa idé &mdash; <span style="color:#A8501E">innan den toppar.</span></h1>
+      <p style="position:relative;font-size:18px;line-height:1.5;color:#6A6359;margin:20px auto 0;max-width:560px">Sök ett ämne och få de starkaste TikTok- och Reels-videorna &mdash; rankade efter Trend Score och hur långt de slår sina kreatörers snitt.</p>
+      <div style="position:relative;display:flex;align-items:center;gap:12px;max-width:560px;margin:36px auto 0;background:#fff;border:1px solid #E0DACE;border-radius:14px;padding:15px 20px;box-shadow:0 18px 44px -20px rgba(60,45,30,.3)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A8501E" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line></svg>
+        <span style="flex:1;text-align:left;font-size:17px;color:#A39C8E">Sök ett ämne &mdash; t.ex. morgonrutin</span>
+        <kbd style="font-family:'Geist Mono',monospace;font-size:12px;color:#8C8676;background:#F1EEE7;border-radius:6px;padding:4px 8px">/</kbd>
+      </div>
+      <div style="position:relative;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:9px;margin-top:22px">
+        <span style="font-size:13px;color:#A39C8E">Prova</span>
+        <span style="background:#fff;border:1px solid #E6E1D7;border-radius:999px;padding:7px 14px;font-size:14px;color:#6A6359">morgonrutin</span>
+        <span style="background:#fff;border:1px solid #E6E1D7;border-radius:999px;padding:7px 14px;font-size:14px;color:#6A6359">baka utan ugn</span>
+        <span style="background:#fff;border:1px solid #E6E1D7;border-radius:999px;padding:7px 14px;font-size:14px;color:#6A6359">löpning</span>
+        <span style="background:#fff;border:1px solid #E6E1D7;border-radius:999px;padding:7px 14px;font-size:14px;color:#6A6359">studio-vlog</span>
+      </div>
+      <div style="position:relative;display:inline-flex;align-items:center;gap:18px;margin-top:38px;font-family:'Geist Mono',monospace;font-size:11px;color:#A39C8E">
+        <span><span style="color:#1A1713;font-weight:600">12 430</span> ämnen indexerade</span><span style="width:4px;height:4px;border-radius:999px;background:#D8D0C2"></span><span>TikTok &amp; Reels</span><span style="width:4px;height:4px;border-radius:999px;background:#D8D0C2"></span><span>uppdateras dygnet runt</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ SEARCH RESULTS + TREND BRIEF ============ -->
+<div id="f-search" style="position:absolute;left:60px;top:3820px;width:1280px">
+  <div data-drags-parent="1" style="font-family:'Geist Mono',monospace;font-size:12px;color:#8C8676;margin-bottom:12px;cursor:grab;display:inline-block">03 &middot; SKÄRM — SÖKRESULTAT &amp; TRENDÖVERSIKT</div>
+  <div style="background:#FAF8F3;border:1px solid #E6E1D7;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:15px 30px;border-bottom:1px solid #E6E1D7;background:#fff">
+      <span style="display:inline-flex;align-items:center;gap:9px"><svg width="22" height="22" viewBox="0 0 40 40"><ellipse cx="20" cy="20" rx="17" ry="8" fill="none" stroke="#1A1713" stroke-width="2.4" transform="rotate(-28 20 20)"></ellipse><circle cx="20" cy="20" r="4.5" fill="#1A1713"></circle><circle cx="33.5" cy="12.6" r="3.4" fill="#A8501E"></circle></svg><span style="font-size:19px;font-weight:700;letter-spacing:-.025em;color:#1A1713">Orbit</span></span>
+      <div style="display:flex;align-items:center;gap:6px;font-size:14px;color:#6A6359"><span style="display:inline-flex;align-items:center;gap:6px;color:#1A1713;font-weight:500;background:#F1EEE7;border-radius:9px;padding:7px 12px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line></svg>Sök</span><span style="padding:7px 12px">Favoriter</span><span style="width:1px;height:18px;background:#E6E1D7;margin:0 6px"></span><span style="width:28px;height:28px;border-radius:999px;background:linear-gradient(150deg,#E6D2BE,#B07A4A);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:600">L</span></div>
+    </div>
+    <!-- sticky search/controls -->
+    <div style="display:flex;flex-direction:column;gap:13px;padding:18px 30px;border-bottom:1px solid #E6E1D7;background:#fff">
+      <div style="display:flex;align-items:center;gap:11px;background:#FAF8F3;border:1px solid #E0DACE;border-radius:11px;padding:11px 16px">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1A1713" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line></svg>
+        <span style="flex:1;font-size:16px;color:#1A1713">morgonrutin</span>
+        <span style="font-family:'Geist Mono',monospace;font-size:11px;color:#A39C8E;background:#F1EEE7;border-radius:6px;padding:3px 7px">/</span>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap">
+          <button style="display:inline-flex;align-items:center;gap:8px;border:1px solid #E0DACE;background:#fff;border-radius:10px;padding:9px 14px;font-size:14px;color:#1A1713;cursor:pointer;font-family:inherit"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="8" x2="20" y2="8"></line><line x1="4" y1="16" x2="20" y2="16"></line><circle cx="9" cy="8" r="2.4" fill="#fff"></circle><circle cx="15" cy="16" r="2.4" fill="#fff"></circle></svg>Filter <span style="background:#1A1713;color:#fff;border-radius:7px;min-width:18px;height:18px;display:inline-grid;place-items:center;font-family:'Geist Mono',monospace;font-size:10px;padding:0 5px">2</span></button>
+          <span style="display:inline-flex;align-items:center;gap:7px;background:#F4E8DE;color:#8A4218;border:1px solid #ECDCCB;border-radius:10px;padding:8px 12px;font-size:13px;font-weight:500">Trend Score <span style="cursor:pointer;opacity:.55">&times;</span></span>
+          <span style="display:inline-flex;align-items:center;gap:7px;background:#fff;color:#6A6359;border:1px solid #E0DACE;border-radius:10px;padding:8px 12px;font-size:13px">Senaste 30 dagar <span style="cursor:pointer;opacity:.45">&times;</span></span>
+        </div>
+        <span style="font-family:'Geist Mono',monospace;font-size:12px;color:#A39C8E">8 resultat</span>
+      </div>
+    </div>
+    <div style="padding:24px 30px 32px">
+      <!-- TREND BRIEF -->
+      <div style="border:1px solid #E6E1D7;border-radius:16px;background:#fff;overflow:hidden;margin-bottom:26px;box-shadow:0 1px 2px rgba(40,33,24,.04)">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:20px 24px 16px">
+          <div>
+            <p style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#A8501E;margin:0">Trendöversikt</p>
+            <h3 style="font-size:21px;font-weight:700;color:#1A1713;margin:7px 0 0;letter-spacing:-.02em">Vad som driver <span style="color:#A8501E">morgonrutin</span> just nu</h3>
+          </div>
+          <span style="display:inline-flex;align-items:center;gap:7px;font-family:'Geist Mono',monospace;font-size:11px;color:#3F6037;flex-shrink:0;background:#E9EFE4;border-radius:999px;padding:6px 12px"><span style="width:7px;height:7px;border-radius:999px;background:#547F4A;display:inline-block"></span>Uppdaterad nyss</span>
+        </div>
+        <div style="display:flex;border-top:1px solid #F0ECE4">
+          <div style="flex:1.3;padding:17px 22px;border-right:1px solid #F0ECE4">
+            <div style="font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#A39C8E">Momentum, 14 dagar</div>
+            <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-top:8px">
+              <div><div style="font-size:24px;font-weight:700;color:#1A1713;letter-spacing:-.02em">Stigande</div><div style="font-size:13px;color:#A8501E;font-weight:600;margin-top:2px">&#9650; +38% v/v</div></div>
+              <svg width="150" height="46" viewBox="0 0 150 46" preserveAspectRatio="none" style="display:block"><polygon points="0,40 25,36 50,38 75,26 100,28 125,14 150,5 150,46 0,46" fill="#A8501E" fill-opacity="0.08"></polygon><polyline points="0,40 25,36 50,38 75,26 100,28 125,14 150,5" fill="none" stroke="#A8501E" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></polyline><circle cx="150" cy="5" r="3.5" fill="#A8501E" stroke="#fff" stroke-width="2"></circle></svg>
+            </div>
+          </div>
+          <div style="flex:1;padding:17px 22px"><div style="font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#A39C8E">Snitt Trend Score</div><div style="font-size:24px;font-weight:700;color:#1A1713;margin-top:8px">8.4 <span style="font-size:14px;font-weight:500;color:#A39C8E">/ 10</span></div><div style="font-size:12px;color:#A39C8E;margin-top:2px">över alla 8 träffar</div></div>
+          <div style="flex:1;padding:17px 22px;border-left:1px solid #F0ECE4"><div style="font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#A39C8E">Breakouts</div><div style="font-size:24px;font-weight:700;color:#1A1713;margin-top:8px">3 nya</div><div style="font-size:12px;color:#A39C8E;margin-top:2px">senaste dygnet</div></div>
+          <div style="flex:1;padding:17px 22px;border-left:1px solid #F0ECE4"><div style="font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:#A39C8E">Bästa tid</div><div style="font-size:24px;font-weight:700;color:#1A1713;margin-top:8px">07&ndash;09</div><div style="font-size:12px;color:#A39C8E;margin-top:2px">vardagar</div></div>
+        </div>
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 24px;border-top:1px solid #F0ECE4;background:#FBFAF6">
+          <span style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#A39C8E">Hooks som funkar</span>
+          <span style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid #E6E1D7;border-radius:9px;padding:7px 12px;font-size:13px;color:#1A1713">&ldquo;POV: du …&rdquo; <span style="color:#A8501E;font-weight:600;font-family:'Geist Mono',monospace;font-size:11px">43%</span></span>
+          <span style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid #E6E1D7;border-radius:9px;padding:7px 12px;font-size:13px;color:#1A1713">&ldquo;3 saker ingen säger om …&rdquo; <span style="color:#A8501E;font-weight:600;font-family:'Geist Mono',monospace;font-size:11px">+340%</span></span>
+          <span style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid #E6E1D7;border-radius:9px;padding:7px 12px;font-size:13px;color:#1A1713">&ldquo;Så gjorde jag … på 4 min&rdquo; <span style="color:#A8501E;font-weight:600;font-family:'Geist Mono',monospace;font-size:11px">sparkvot</span></span>
+        </div>
+      </div>
+      <div style="display:flex;align-items:baseline;gap:11px;margin-bottom:18px">
+        <span style="font-size:14px;color:#A39C8E">Resultat för</span>
+        <h2 style="font-size:26px;font-weight:700;letter-spacing:-.025em;color:#1A1713;margin:0">morgonrutin</h2>
+        <span style="margin-left:auto;font-family:'Geist Mono',monospace;font-size:11px;color:#A39C8E">sorterat efter trend score</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px">
+        <sc-for list="{{ videos }}" as="v" hint-placeholder-count="8"><dc-import name="OrbitCard" v="{{ v }}" hint-size="280px,540px"></dc-import></sc-for>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ CARD ANATOMY ============ -->
+<div id="f-cardanat" style="position:absolute;left:60px;top:5890px;width:600px">
+  <div data-drags-parent="1" style="font-family:'Geist Mono',monospace;font-size:12px;color:#8C8676;margin-bottom:12px;cursor:grab;display:inline-block">03 &middot; VIDEOKORT — ANATOMI</div>
+  <div style="background:#FAF8F3;border:1px solid #E6E1D7;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden;padding:30px 32px">
+    <div style="display:flex;gap:26px;align-items:flex-start">
+      <div style="width:230px;flex-shrink:0"><dc-import name="OrbitCard" v="{{ cardOne }}" hint-size="230px,500px"></dc-import></div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:14px;padding-top:6px">
+        <div><div style="display:flex;align-items:center;gap:8px"><span style="font-family:'Geist Mono',monospace;font-size:10px;color:#A8501E;font-weight:600">01</span><span style="font-size:14px;font-weight:600;color:#1A1713">Plattform &amp; spara</span></div><p style="font-size:12.5px;line-height:1.45;color:#6A6359;margin:4px 0 0">Plattforms-pill uppe vänster, spara-hjärta uppe höger.</p></div>
+        <div><div style="display:flex;align-items:center;gap:8px"><span style="font-family:'Geist Mono',monospace;font-size:10px;color:#A8501E;font-weight:600">02</span><span style="font-size:14px;font-weight:600;color:#1A1713">Trend Score-ring</span></div><p style="font-size:12.5px;line-height:1.45;color:#6A6359;margin:4px 0 0">Liten ring som fylls efter poängen 0&ndash;10 &mdash; läses på en blick.</p></div>
+        <div><div style="display:flex;align-items:center;gap:8px"><span style="font-family:'Geist Mono',monospace;font-size:10px;color:#A8501E;font-weight:600">03</span><span style="font-size:14px;font-weight:600;color:#1A1713">Rank · kreatör · tid</span></div><p style="font-size:12.5px;line-height:1.45;color:#6A6359;margin:4px 0 0">Mono-rad som ramar in kontexten utan att ta plats.</p></div>
+        <div><div style="display:flex;align-items:center;gap:8px"><span style="font-family:'Geist Mono',monospace;font-size:10px;color:#A8501E;font-weight:600">04</span><span style="font-size:14px;font-weight:600;color:#1A1713">Tempo &amp; outlier</span></div><p style="font-size:12.5px;line-height:1.45;color:#6A6359;margin:4px 0 0">Sparkline för tempo + chip som visar hur många gånger videon slår kreatörens snitt.</p></div>
+        <div><div style="display:flex;align-items:center;gap:8px"><span style="font-family:'Geist Mono',monospace;font-size:10px;color:#A8501E;font-weight:600">05</span><span style="font-size:14px;font-weight:600;color:#1A1713">Metrik-grid</span></div><p style="font-size:12.5px;line-height:1.45;color:#6A6359;margin:4px 0 0">Fyra kolumner, mono-värden + versala etiketter. Ikonlöst &mdash; rent och datadrivet.</p></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ TREND SCORE EXPLAINER ============ -->
+<div id="f-explainer" style="position:absolute;left:700px;top:5890px;width:640px">
+  <div data-drags-parent="1" style="font-family:'Geist Mono',monospace;font-size:12px;color:#8C8676;margin-bottom:12px;cursor:grab;display:inline-block">03 &middot; TREND SCORE &amp; OUTLIER, FÖRKLARAT</div>
+  <div style="background:#FAF8F3;border:1px solid #E6E1D7;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden;padding:30px 32px">
+    <p style="font-family:'Geist Mono',monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#A8501E;margin:0">Så räknas det</p>
+    <div style="display:flex;align-items:center;gap:22px;margin-top:16px;padding-bottom:20px;border-bottom:1px solid #E6E1D7">
+      <div style="position:relative;width:104px;height:104px;flex-shrink:0">
+        <svg width="104" height="104" viewBox="0 0 104 104" style="transform:rotate(-90deg)"><circle cx="52" cy="52" r="44" fill="none" stroke="#EDE6DA" stroke-width="8"></circle><circle cx="52" cy="52" r="44" fill="none" stroke="#A8501E" stroke-width="8" stroke-linecap="round" stroke-dasharray="254 277"></circle></svg>
+        <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center"><span style="font-family:'Geist Mono',monospace;font-size:28px;font-weight:600;color:#1A1713;line-height:1">9.2</span><span style="font-family:'Geist Mono',monospace;font-size:9px;letter-spacing:.1em;color:#A39C8E">/ 10</span></div>
+      </div>
+      <div>
+        <div style="display:inline-flex;align-items:center;gap:5px;background:#F4E8DE;color:#8A4218;border-radius:999px;padding:5px 12px;font-size:12px;font-weight:600">&#9650; Stark trend</div>
+        <p style="font-size:13.5px;line-height:1.5;color:#6A6359;margin:12px 0 0">En sammanvägd poäng <strong style="color:#1A1713">0&ndash;10</strong> som mäter momentum &mdash; inte bara råa visningar. Fyra signaler vägs ihop:</p>
+      </div>
+    </div>
+    <div style="margin-top:18px">
+      <sc-for list="{{ factors }}" as="f" hint-placeholder-count="4">
+        <div style="margin-bottom:14px">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:6px"><span style="font-size:14px;color:#1A1713;font-weight:500">{{ f.name }}</span><span style="font-family:'Geist Mono',monospace;font-size:11px;color:#A39C8E">vikt {{ f.weight }}</span></div>
+          <div style="height:8px;background:#EFEBE2;border-radius:999px;overflow:hidden"><div style="height:100%;width: {{ f.barPct }};background:#A8501E;border-radius:999px"></div></div>
+          <div style="font-size:12px;color:#A39C8E;margin-top:6px">{{ f.desc }}</div>
+        </div>
+      </sc-for>
+    </div>
+    <div style="background:#F4E8DE;border:1px solid #ECDCCB;border-radius:12px;padding:15px 17px;margin-top:16px">
+      <div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:700;color:#8A4218"><span style="display:inline-flex;align-items:center;gap:4px;background:#fff;border-radius:6px;padding:2px 8px">&#9650; 8×</span> Outlier-kvot</div>
+      <p style="font-size:13px;line-height:1.5;color:#6A6359;margin:9px 0 0">Visar hur många gånger fler visningar en video får än kreatörens <strong style="color:#1A1713">egna snitt</strong> &mdash; så att en stark video från ett litet konto inte drunknar bakom de allra största.</p>
+    </div>
+    <p style="font-family:'Geist Mono',monospace;font-size:11px;line-height:1.6;color:#B3AC9E;margin:16px 0 0">TS = 0.35&middot;Engagemang + 0.30&middot;Tempo + 0.20&middot;Outlier + 0.15&middot;Färskhet</p>
+  </div>
+</div>
+
+<!-- ============ FAVORITES / BOARDS ============ -->
+<div id="f-favs" style="position:absolute;left:60px;top:6640px;width:1280px">
+  <div data-drags-parent="1" style="font-family:'Geist Mono',monospace;font-size:12px;color:#8C8676;margin-bottom:12px;cursor:grab;display:inline-block">03 &middot; SKÄRM — FAVORITER &amp; SAMLINGAR</div>
+  <div style="background:#FAF8F3;border:1px solid #E6E1D7;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden">
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:15px 30px;border-bottom:1px solid #E6E1D7;background:#fff">
+      <span style="display:inline-flex;align-items:center;gap:9px"><svg width="22" height="22" viewBox="0 0 40 40"><ellipse cx="20" cy="20" rx="17" ry="8" fill="none" stroke="#1A1713" stroke-width="2.4" transform="rotate(-28 20 20)"></ellipse><circle cx="20" cy="20" r="4.5" fill="#1A1713"></circle><circle cx="33.5" cy="12.6" r="3.4" fill="#A8501E"></circle></svg><span style="font-size:19px;font-weight:700;letter-spacing:-.025em;color:#1A1713">Orbit</span></span>
+      <div style="display:flex;align-items:center;gap:6px;font-size:14px;color:#6A6359"><span style="padding:7px 12px">Sök</span><span style="display:inline-flex;align-items:center;gap:6px;color:#1A1713;font-weight:500;background:#F1EEE7;border-radius:9px;padding:7px 12px">&#9829; Favoriter</span><span style="width:1px;height:18px;background:#E6E1D7;margin:0 6px"></span><span style="width:28px;height:28px;border-radius:999px;background:linear-gradient(150deg,#E6D2BE,#B07A4A);color:#fff;display:grid;place-items:center;font-size:12px;font-weight:600">L</span></div>
+    </div>
+    <div style="padding:28px 30px 32px">
+      <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:22px">
+        <div>
+          <h2 style="font-size:32px;font-weight:700;letter-spacing:-.03em;color:#1A1713;margin:0">Favoriter</h2>
+          <p style="font-size:14px;color:#A39C8E;margin:6px 0 0">Sparade videor, ordnade i samlingar &mdash; din egen inspirationsbank.</p>
+        </div>
+        <span style="font-family:'Geist Mono',monospace;font-size:12px;color:#A39C8E">24 sparade</span>
+      </div>
+      <div style="display:flex;flex-wrap:wrap;gap:9px;margin-bottom:24px">
+        <span style="display:inline-flex;align-items:center;gap:8px;background:#1A1713;color:#fff;border-radius:999px;padding:9px 16px;font-size:14px;font-weight:500">Alla <span style="font-family:'Geist Mono',monospace;font-size:11px;opacity:.6">24</span></span>
+        <span style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid #E0DACE;color:#6A6359;border-radius:999px;padding:9px 16px;font-size:14px">Morgonrutiner <span style="font-family:'Geist Mono',monospace;font-size:11px;color:#A39C8E">8</span></span>
+        <span style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid #E0DACE;color:#6A6359;border-radius:999px;padding:9px 16px;font-size:14px">Baking <span style="font-family:'Geist Mono',monospace;font-size:11px;color:#A39C8E">6</span></span>
+        <span style="display:inline-flex;align-items:center;gap:8px;background:#fff;border:1px solid #E0DACE;color:#6A6359;border-radius:999px;padding:9px 16px;font-size:14px">Hooks att testa <span style="font-family:'Geist Mono',monospace;font-size:11px;color:#A39C8E">10</span></span>
+        <span style="display:inline-flex;align-items:center;gap:7px;background:#fff;border:1px dashed #D5CFC2;color:#A39C8E;border-radius:999px;padding:9px 16px;font-size:14px">+ Ny samling</span>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px">
+        <sc-for list="{{ favs }}" as="v" hint-placeholder-count="4"><dc-import name="OrbitCard" v="{{ v }}" hint-size="280px,540px"></dc-import></sc-for>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ LOGIN ============ -->
+<div id="f-login" style="position:absolute;left:60px;top:7700px;width:420px">
+  <div data-drags-parent="1" style="font-family:'Geist Mono',monospace;font-size:12px;color:#8C8676;margin-bottom:12px;cursor:grab;display:inline-block">03 &middot; LOGGA IN</div>
+  <div style="background:#FAF8F3;border:1px solid #E6E1D7;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden">
+    <div style="display:grid;place-items:center;padding:46px 36px;background:radial-gradient(120% 90% at 50% -10%,#F4ECE0 0%,#FAF8F3 60%)">
+      <div style="width:320px">
+        <div style="text-align:center;margin-bottom:22px">
+          <svg width="34" height="34" viewBox="0 0 40 40" style="display:inline-block"><ellipse cx="20" cy="20" rx="17" ry="8" fill="none" stroke="#1A1713" stroke-width="2.4" transform="rotate(-28 20 20)"></ellipse><circle cx="20" cy="20" r="4.5" fill="#1A1713"></circle><circle cx="33.5" cy="12.6" r="3.4" fill="#A8501E"></circle></svg>
+          <div style="font-size:26px;font-weight:700;letter-spacing:-.025em;color:#1A1713;margin-top:8px">Orbit</div>
+          <p style="font-size:14px;color:#6A6359;margin:8px 0 0">Logga in för att söka och spara inspiration.</p>
+        </div>
+        <div style="background:#fff;border:1px solid #E6E1D7;border-radius:16px;padding:24px;box-shadow:0 18px 44px -22px rgba(60,45,30,.25)">
+          <div style="margin-bottom:14px">
+            <label style="display:block;font-size:13px;font-weight:500;color:#1A1713;margin-bottom:6px">E-post</label>
+            <div style="border:1px solid #E0DACE;border-radius:11px;background:#fff;padding:11px 13px;font-size:14px;color:#1A1713">linnea@studio.se</div>
+          </div>
+          <div style="margin-bottom:18px">
+            <label style="display:block;font-size:13px;font-weight:500;color:#1A1713;margin-bottom:6px">Lösenord</label>
+            <div style="border:1px solid #A8501E;border-radius:11px;background:#fff;padding:11px 13px;font-size:14px;color:#1A1713;box-shadow:0 0 0 4px #F4E8DE">&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;</div>
+          </div>
+          <button style="width:100%;background:#1A1713;color:#fff;border:none;border-radius:11px;padding:12px;font-size:15px;font-weight:500;cursor:pointer;font-family:inherit">Logga in</button>
+          <p style="text-align:center;font-size:14px;color:#6A6359;margin:16px 0 0">Inget konto? <span style="font-weight:600;color:#A8501E">Registrera</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ REGISTER ============ -->
+<div id="f-register" style="position:absolute;left:520px;top:7700px;width:420px">
+  <div data-drags-parent="1" style="font-family:'Geist Mono',monospace;font-size:12px;color:#8C8676;margin-bottom:12px;cursor:grab;display:inline-block">03 &middot; SKAPA KONTO</div>
+  <div style="background:#FAF8F3;border:1px solid #E6E1D7;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden">
+    <div style="display:grid;place-items:center;padding:46px 36px;background:radial-gradient(120% 90% at 50% -10%,#F4ECE0 0%,#FAF8F3 60%)">
+      <div style="width:320px">
+        <div style="text-align:center;margin-bottom:22px">
+          <svg width="34" height="34" viewBox="0 0 40 40" style="display:inline-block"><ellipse cx="20" cy="20" rx="17" ry="8" fill="none" stroke="#1A1713" stroke-width="2.4" transform="rotate(-28 20 20)"></ellipse><circle cx="20" cy="20" r="4.5" fill="#1A1713"></circle><circle cx="33.5" cy="12.6" r="3.4" fill="#A8501E"></circle></svg>
+          <div style="font-size:26px;font-weight:700;letter-spacing:-.025em;color:#1A1713;margin-top:8px">Orbit</div>
+          <p style="font-size:14px;color:#6A6359;margin:8px 0 0">Skapa ett konto för att spara dina inspirationer.</p>
+        </div>
+        <div style="background:#fff;border:1px solid #E6E1D7;border-radius:16px;padding:24px;box-shadow:0 18px 44px -22px rgba(60,45,30,.25)">
+          <div style="margin-bottom:14px">
+            <label style="display:block;font-size:13px;font-weight:500;color:#1A1713;margin-bottom:6px">E-post</label>
+            <div style="border:1px solid #E0DACE;border-radius:11px;background:#fff;padding:11px 13px;font-size:14px;color:#A39C8E">du@exempel.se</div>
+          </div>
+          <div style="margin-bottom:18px">
+            <label style="display:block;font-size:13px;font-weight:500;color:#1A1713;margin-bottom:6px">Lösenord</label>
+            <div style="border:1px solid #E0DACE;border-radius:11px;background:#fff;padding:11px 13px;font-size:14px;color:#A39C8E">&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;</div>
+            <p style="font-size:12px;color:#A39C8E;margin:6px 0 0">Minst 6 tecken.</p>
+          </div>
+          <button style="width:100%;background:#1A1713;color:#fff;border:none;border-radius:11px;padding:12px;font-size:15px;font-weight:500;cursor:pointer;font-family:inherit">Skapa konto</button>
+          <p style="text-align:center;font-size:14px;color:#6A6359;margin:16px 0 0">Har du redan ett konto? <span style="font-weight:600;color:#A8501E">Logga in</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ LOGIN ERROR ============ -->
+<div id="f-error" style="position:absolute;left:980px;top:7700px;width:360px">
+  <div data-drags-parent="1" style="font-family:'Geist Mono',monospace;font-size:12px;color:#8C8676;margin-bottom:12px;cursor:grab;display:inline-block">03 &middot; INLOGGNINGSFEL</div>
+  <div style="background:#FAF8F3;border:1px solid #E6E1D7;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden">
+    <div style="padding:34px 28px">
+      <div style="background:#fff;border:1px solid #E6E1D7;border-radius:16px;padding:22px;box-shadow:0 18px 44px -22px rgba(60,45,30,.22)">
+        <div style="margin-bottom:14px">
+          <label style="display:block;font-size:13px;font-weight:500;color:#1A1713;margin-bottom:6px">E-post</label>
+          <div style="border:1px solid #E0DACE;border-radius:11px;background:#fff;padding:11px 13px;font-size:14px;color:#1A1713">linnea@studio.se</div>
+        </div>
+        <div style="margin-bottom:14px">
+          <label style="display:block;font-size:13px;font-weight:500;color:#1A1713;margin-bottom:6px">Lösenord</label>
+          <div style="border:1px solid #E0DACE;border-radius:11px;background:#fff;padding:11px 13px;font-size:14px;color:#1A1713">&bull;&bull;&bull;&bull;&bull;</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;background:#F8EAE7;border:1px solid #EBCDC8;color:#A6473E;border-radius:10px;padding:10px 12px;font-size:13px;margin-bottom:14px"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"></circle><line x1="12" y1="8" x2="12" y2="13"></line><circle cx="12" cy="16.5" r=".6" fill="currentColor" stroke="none"></circle></svg>Fel e-post eller lösenord.</div>
+        <button style="width:100%;background:#1A1713;color:#fff;border:none;border-radius:11px;padding:12px;font-size:15px;font-weight:500;cursor:pointer;font-family:inherit">Logga in</button>
+      </div>
+      <p style="font-family:'Geist Mono',monospace;font-size:10px;color:#A39C8E;margin:14px 2px 0;line-height:1.5">Felmeddelanden översätts från Supabase till svenska.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ COLLECTING ============ -->
+<div id="f-collecting" style="position:absolute;left:60px;top:8340px;width:640px">
+  <div data-drags-parent="1" style="font-family:'Geist Mono',monospace;font-size:12px;color:#8C8676;margin-bottom:12px;cursor:grab;display:inline-block">03 &middot; SAMLAR IN TRENDER (LIVE)</div>
+  <div style="background:#FAF8F3;border:1px solid #E6E1D7;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden">
+    <div style="padding:24px 28px 28px">
+      <p style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#A39C8E;margin:0 0 9px">När träffar redan visas</p>
+      <span style="display:inline-flex;align-items:center;gap:9px;border:1px solid #ECDCCB;background:#F4E8DE;border-radius:999px;padding:7px 14px;font-size:13px;color:#6A6359"><span style="width:14px;height:14px;border-radius:999px;border:2px solid #EAD6C6;border-top-color:#A8501E;display:inline-block;animation:orbspin .8s linear infinite"></span>Uppdaterar med färska trender&hellip;</span>
+      <p style="font-family:'Geist Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:#A39C8E;margin:26px 0 12px">Kallstart &mdash; första sökningen på ett ämne</p>
+      <div style="border:1px solid #ECDCCB;background:radial-gradient(120% 100% at 50% 0%,#F6ECE0 0%,#FCFAF6 70%);border-radius:16px;padding:48px 32px;text-align:center;position:relative;overflow:hidden">
+        <svg width="200" height="200" viewBox="0 0 200 200" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);opacity:.4"><ellipse cx="100" cy="100" rx="80" ry="34" fill="none" stroke="#E7DECF" stroke-width="1.5" transform="rotate(-28 100 100)"></ellipse></svg>
+        <div style="position:relative">
+          <span style="width:36px;height:36px;border-radius:999px;border:3px solid #EAD6C6;border-top-color:#A8501E;display:inline-block;animation:orbspin .8s linear infinite"></span>
+          <p style="font-size:22px;font-weight:700;color:#1A1713;margin:18px 0 0;letter-spacing:-.02em">Samlar in färska trender&hellip;</p>
+          <p style="font-size:14px;line-height:1.5;color:#6A6359;margin:10px auto 0;max-width:380px">Första gången någon söker på det här hämtar vi de starkaste videorna live. Det tar oftast 30 sekunder till någon minut.</p>
+          <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:16px;font-family:'Geist Mono',monospace;font-size:11px;color:#A39C8E"><span>TikTok</span><span>&middot;</span><span>Reels</span><span>&middot;</span><span style="color:#A8501E">12s</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ EMPTY ============ -->
+<div id="f-empty" style="position:absolute;left:740px;top:8340px;width:600px">
+  <div data-drags-parent="1" style="font-family:'Geist Mono',monospace;font-size:12px;color:#8C8676;margin-bottom:12px;cursor:grab;display:inline-block">03 &middot; INGA TRÄFFAR</div>
+  <div style="background:#FAF8F3;border:1px solid #E6E1D7;border-radius:6px;box-shadow:0 1px 3px rgba(0,0,0,.06);overflow:hidden">
+    <div style="padding:26px">
+      <div style="border:1px dashed #D5CFC2;background:#FBFAF6;border-radius:16px;padding:48px 28px;text-align:center">
+        <div style="width:48px;height:48px;border-radius:14px;background:#F1EEE7;display:inline-grid;place-items:center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#A39C8E" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"></circle><line x1="21" y1="21" x2="16.5" y2="16.5"></line></svg></div>
+        <p style="font-size:24px;font-weight:700;color:#1A1713;margin:16px 0 0;letter-spacing:-.02em">Inga träffar ännu</p>
+        <p style="font-size:14px;line-height:1.5;color:#6A6359;margin:10px auto 0;max-width:360px">Vi hittade inga videor för <span style="font-weight:600;color:#1A1713">morgonrutin</span>. Prova ett bredare ämne eller andra filter.</p>
+        <div style="display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;margin-top:20px">
+          <span style="background:#fff;border:1px solid #E6E1D7;border-radius:999px;padding:7px 14px;font-size:13px;color:#6A6359">baka utan ugn</span>
+          <span style="background:#fff;border:1px solid #E6E1D7;border-radius:999px;padding:7px 14px;font-size:13px;color:#6A6359">löpning</span>
+          <span style="background:#fff;border:1px solid #E6E1D7;border-radius:999px;padding:7px 14px;font-size:13px;color:#6A6359">studio-vlog</span>
+          <span style="background:#fff;border:1px solid #E6E1D7;border-radius:999px;padding:7px 14px;font-size:13px;color:#6A6359">fika</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1400,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  renderVals() {
+    const C = 2 * Math.PI * 9; // ring circumference for score chip (r=9)
+    const mk = (o) => ({ ...o, scoreDash: `${(o.score / 10 * C).toFixed(1)} ${C.toFixed(2)}` });
+    const videos = [
+      mk({ rank2:"01", handle:"@studio.linnea", platformLabel:"TikTok", time:"2 d", caption:"POV: du öppnar studion klockan 06:00", viewsFmt:"2.4M", likesFmt:"410K", commentsFmt:"8.2K", sharesFmt:"31K", scoreFmt:"9.2", score:9.2, outlier:"8×", spark:"2,16 12,14 22,12 32,8 42,5 50,2", poster:"linear-gradient(150deg,#E6D2BE,#B07A4A)" }),
+      mk({ rank2:"02", handle:"@beat.lab.se", platformLabel:"TikTok", time:"1 d", caption:"Bygg en hook som fastnar på 15 sekunder", viewsFmt:"3.1M", likesFmt:"520K", commentsFmt:"11K", sharesFmt:"47K", scoreFmt:"9.5", score:9.5, outlier:"12×", spark:"2,15 12,15 22,11 32,8 42,4 50,2", poster:"linear-gradient(150deg,#E9D7C6,#A8623A)" }),
+      mk({ rank2:"03", handle:"@nordic.bakes", platformLabel:"TikTok", time:"5 d", caption:"3 ingredienser, noll ugn, klar på 4 minuter", viewsFmt:"1.8M", likesFmt:"290K", commentsFmt:"5.1K", sharesFmt:"22K", scoreFmt:"8.7", score:8.7, outlier:"6×", spark:"2,14 12,13 22,13 32,9 42,7 50,4", poster:"linear-gradient(150deg,#EADFCE,#BBA06E)" }),
+      mk({ rank2:"04", handle:"@run.with.os", platformLabel:"TikTok", time:"6 d", caption:"5K varje morgon i 30 dagar — så gick det", viewsFmt:"1.5M", likesFmt:"233K", commentsFmt:"4.1K", sharesFmt:"18K", scoreFmt:"8.4", score:8.4, outlier:"5×", spark:"2,13 12,14 22,11 32,10 42,6 50,4", poster:"linear-gradient(150deg,#DDE0CF,#7E8A66)" }),
+      mk({ rank2:"05", handle:"@movement.maya", platformLabel:"Reels", time:"1 v", caption:"Den enda stretchen du faktiskt behöver", viewsFmt:"980K", likesFmt:"154K", commentsFmt:"2.3K", sharesFmt:"12K", scoreFmt:"8.1", score:8.1, outlier:"4×", spark:"2,12 12,13 22,10 32,11 42,7 50,5", poster:"linear-gradient(150deg,#D9DBE0,#7F8794)" }),
+      mk({ rank2:"06", handle:"@plant.papa", platformLabel:"Reels", time:"3 d", caption:"Jag räddade den här växten på 30 sekunder", viewsFmt:"1.2M", likesFmt:"201K", commentsFmt:"3.4K", sharesFmt:"9.8K", scoreFmt:"7.9", score:7.9, outlier:"7×", spark:"2,15 12,12 22,12 32,8 42,6 50,3", poster:"linear-gradient(150deg,#E7D2CC,#A87A72)" }),
+      mk({ rank2:"07", handle:"@fika.daily", platformLabel:"Reels", time:"4 d", caption:"Kanelbulle-hacket som alla missar", viewsFmt:"740K", likesFmt:"98K", commentsFmt:"1.9K", sharesFmt:"6.2K", scoreFmt:"7.4", score:7.4, outlier:"3×", spark:"2,11 12,12 22,10 32,9 42,8 50,6", poster:"radial-gradient(circle at 32% 26%,#E0E3D2,#8A9568)" }),
+      mk({ rank2:"08", handle:"@design.notes", platformLabel:"Reels", time:"1 v", caption:"Typografi-regeln jag bryter allra mest", viewsFmt:"620K", likesFmt:"89K", commentsFmt:"2.7K", sharesFmt:"5.5K", scoreFmt:"7.1", score:7.1, outlier:"4×", spark:"2,13 12,11 22,12 32,9 42,8 50,5", poster:"linear-gradient(150deg,#DEE0E2,#9AA0A6)" }),
+    ];
+    const factors = [
+      { name:"Engagemang", weight:"35%", barPct:"88%", desc:"Likes, kommentarer & delningar delat på visningar" },
+      { name:"Tempo", weight:"30%", barPct:"94%", desc:"Hur snabbt visningarna växer per timme" },
+      { name:"Outlier-kvot", weight:"20%", barPct:"82%", desc:"Hur långt videon slår kreatörens egna snitt" },
+      { name:"Färskhet", weight:"15%", barPct:"80%", desc:"Hur ny videon är — färskt väger tyngre" },
+    ];
+    return { videos, favs: videos.slice(0, 4), cardOne: videos[0], factors };
+  }
+}
+</script>
+</body>
+</html>

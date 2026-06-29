@@ -1,4 +1,4 @@
-import 'dotenv/config';
+import '../config/load-dotenv.js';
 import { loadEnv } from '../config/env.js';
 import { createOpenAIContentClassifier } from '../providers/openai.js';
 import { REAL_INDUSTRIES } from '../config/industries.js';

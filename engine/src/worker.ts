@@ -1,4 +1,4 @@
-import 'dotenv/config'; // load .env into process.env before loadEnv() reads it
+import './config/load-dotenv.js';
 import type { Period, Platform } from './adapters/contract.js';
 import { loadEnv } from './config/env.js';
 import { createSupabase } from './store/supabase.js';

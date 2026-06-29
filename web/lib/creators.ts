@@ -23,7 +23,7 @@ const MIN_FOR_STATS = 4;
 const VIDEO_COLS =
   "id, platform, platform_video_id, creator_handle, caption, hashtags, url, thumbnail_url, " +
   "posted_at, language, duration_seconds, views, likes, comments, shares, " +
-  "engagement_rate, trend_score, outlier_ratio, is_breakout, views_per_day, views_growth_pct";
+  "engagement_rate, outlier_ratio, is_breakout, views_per_day, views_growth_pct";
 
 export interface CreatorStats {
   /** How many of this creator's videos we've indexed (the basis for every other figure). */
@@ -81,7 +81,6 @@ function mapRow(row: Record<string, unknown>): VideoResult {
     comments: n(row.comments),
     shares: n(row.shares),
     engagementRate: row.engagement_rate == null ? undefined : Number(row.engagement_rate),
-    trendScore: row.trend_score == null ? undefined : Number(row.trend_score),
     outlierRatio: row.outlier_ratio == null ? undefined : Number(row.outlier_ratio),
     isBreakout: Boolean(row.is_breakout),
     viewsPerDay: row.views_per_day == null ? undefined : Number(row.views_per_day),
@@ -169,7 +168,6 @@ export async function getCreatorProfile(
         .eq("platform", platform)
         .eq("creator_handle", handle)
         .gte("posted_at", sinceIso())
-        .order("trend_score", { ascending: false, nullsFirst: false })
         .order("views", { ascending: false })
         .limit(VIDEO_LIMIT)
         .abortSignal(controller.signal),

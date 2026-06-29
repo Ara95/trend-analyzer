@@ -78,12 +78,12 @@ export function SearchFilters({ query }: { query: VideoSearchQuery }) {
           type="button"
           onClick={() => setOpen((o) => !o)}
           aria-expanded={open}
-          className="inline-flex items-center gap-2 rounded-lg border border-line bg-card px-3 py-1.5 text-sm text-ink-dim transition-colors hover:border-ink/20 hover:text-ink"
+          className="inline-flex items-center gap-2 rounded-[10px] border border-input bg-card px-3 py-1.5 text-sm text-ink-dim transition-colors hover:border-ink/20 hover:text-ink"
         >
           <SlidersHorizontal size={14} />
           Filter
           {active.length > 0 && (
-            <span className="inline-flex min-w-[1.25rem] items-center justify-center rounded-full bg-signal px-1 font-mono text-[10px] font-semibold text-white">
+            <span className="inline-flex min-w-[1.125rem] items-center justify-center rounded-md bg-primary px-1 font-mono text-[10px] font-semibold text-primary-foreground">
               {active.length}
             </span>
           )}
@@ -147,7 +147,7 @@ export function SearchFilters({ query }: { query: VideoSearchQuery }) {
           key={g.field}
           type="button"
           onClick={() => go(g.field, g.default)}
-          className="inline-flex items-center gap-1.5 rounded-full border border-line bg-signal-soft px-3 py-1 text-xs text-signal transition-colors hover:border-signal/30"
+          className="inline-flex items-center gap-1.5 rounded-full border border-line bg-card px-3 py-1 text-xs text-ink-dim transition-colors hover:border-ink/20 hover:text-ink"
         >
           {labelFor(g, String(optimisticQuery[g.field]))}
           <X size={12} />

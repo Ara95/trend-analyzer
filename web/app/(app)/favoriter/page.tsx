@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Heart } from "lucide-react";
 import { listCollections, listItems } from "@/lib/collections";
 import { VideoCard } from "@/components/video-card";
+import { NewCollectionPill } from "@/components/new-collection-pill";
 
 export const metadata: Metadata = {
   title: "Favoriter — Orbit",
@@ -23,35 +24,63 @@ function CollectionTabs({
           <Link
             key={c.id}
             href={`/favoriter?c=${c.id}`}
+            aria-current={active ? "page" : undefined}
             className={
               active
-                ? "inline-flex items-center gap-1.5 rounded-full bg-primary px-3.5 py-1.5 text-sm font-medium text-primary-foreground"
-                : "inline-flex items-center gap-1.5 rounded-full border border-line bg-white px-3.5 py-1.5 text-sm text-ink-dim transition-colors hover:border-ink/20 hover:text-ink"
+                ? "inline-flex items-center gap-2 rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground"
+                : "inline-flex items-center gap-2 rounded-full border border-line bg-card px-4 py-2 text-sm text-ink-dim transition-colors hover:border-ink/20 hover:text-ink"
             }
           >
             {c.name}
-            <span className={active ? "font-mono text-xs text-primary-foreground/70" : "font-mono text-xs text-ink-faint"}>
+            <span
+              className={
+                active
+                  ? "font-mono text-[11px] text-primary-foreground/60"
+                  : "font-mono text-[11px] text-ink-faint"
+              }
+            >
               {c.itemCount}
             </span>
           </Link>
         );
       })}
+      <NewCollectionPill />
     </div>
   );
 }
 
 function EmptyState({ message }: { message: string }) {
   return (
-    <div className="rounded-2xl border border-dashed border-line bg-muted-surface/40 px-6 py-16 text-center">
-      <Heart size={28} className="mx-auto text-ink-faint" />
-      <p className="mt-4 font-display text-3xl font-bold tracking-tight text-ink">Inga sparade videor</p>
-      <p className="mx-auto mt-3 max-w-md text-sm text-muted-foreground">{message}</p>
+    <div className="rounded-2xl border border-dashed border-[#d5cfc2] bg-[#fbfaf6] px-6 py-16 text-center">
+      <div className="mx-auto grid size-12 place-items-center rounded-[14px] bg-muted">
+        <Heart size={22} className="text-ink-faint" />
+      </div>
+      <p className="mt-4 font-display text-2xl font-bold tracking-[-0.02em] text-ink">
+        Inga sparade videor
+      </p>
+      <p className="mx-auto mt-2.5 max-w-md text-sm text-muted-foreground">{message}</p>
       <Link
         href="/search"
         className="mt-6 inline-flex items-center rounded-full bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/80"
       >
         Sök inspiration
       </Link>
+    </div>
+  );
+}
+
+function PageHeader({ savedTotal }: { savedTotal?: number }) {
+  return (
+    <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
+      <div>
+        <h1 className="font-display text-[32px] font-bold tracking-[-0.03em] text-ink">Favoriter</h1>
+        <p className="mt-1.5 text-sm text-ink-faint">
+          Sparade videor, ordnade i samlingar — din egen inspirationsbank.
+        </p>
+      </div>
+      {savedTotal != null && (
+        <span className="font-mono text-xs text-ink-faint">{savedTotal} sparade</span>
+      )}
     </div>
   );
 }
@@ -67,7 +96,7 @@ export default async function FavoriterPage({
   if (collections.length === 0) {
     return (
       <main className="mx-auto w-full max-w-6xl flex-1 px-5 py-10 sm:px-8">
-        <h1 className="mb-6 font-display text-4xl font-bold tracking-tight text-ink">Favoriter</h1>
+        <PageHeader />
         <EmptyState message="Du har inga samlingar ännu. Sök ett ämne och spara videor med hjärtat för att skapa din första samling." />
       </main>
     );
@@ -76,10 +105,11 @@ export default async function FavoriterPage({
   // Default to the first collection when none is selected (or the param points at a deleted one).
   const active = collections.find((col) => col.id === c) ?? collections[0];
   const items = await listItems(active.id);
+  const savedTotal = collections.reduce((sum, col) => sum + col.itemCount, 0);
 
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-5 py-10 sm:px-8">
-      <h1 className="mb-6 font-display text-4xl font-bold tracking-tight text-ink">Favoriter</h1>
+      <PageHeader savedTotal={savedTotal} />
 
       <div className="mb-8">
         <CollectionTabs collections={collections} activeId={active.id} />

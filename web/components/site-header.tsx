@@ -1,5 +1,8 @@
+import { Suspense } from "react";
 import Link from "next/link";
-import { Search, Heart, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
+import { OrbitMark } from "@/components/orbit-mark";
+import { HeaderNav, HeaderNavFallback } from "@/components/header-nav";
 
 /**
  * Shared top nav for the authenticated app (search + favoriter). Rendered by the (app) layout,
@@ -10,25 +13,18 @@ export function SiteHeader({ email }: { email?: string }) {
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-background/90 backdrop-blur">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3.5 sm:px-8">
-        <Link href="/search" className="font-display text-xl font-bold tracking-tight text-ink">
-          Orbit<span className="ml-0.5 inline-block size-1.5 rounded-full bg-signal align-middle" aria-hidden />
+        <Link
+          href="/search"
+          className="inline-flex items-center gap-2 font-display text-xl font-bold tracking-[-0.025em] text-ink"
+        >
+          <OrbitMark size={22} />
+          Orbit
         </Link>
 
         <nav className="flex items-center gap-1 text-sm">
-          <Link
-            href="/search"
-            className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-ink-dim transition-colors hover:bg-muted hover:text-ink"
-          >
-            <Search size={15} />
-            <span className="hidden sm:inline">Sök</span>
-          </Link>
-          <Link
-            href="/favoriter"
-            className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-ink-dim transition-colors hover:bg-muted hover:text-ink"
-          >
-            <Heart size={15} />
-            <span className="hidden sm:inline">Favoriter</span>
-          </Link>
+          <Suspense fallback={<HeaderNavFallback />}>
+            <HeaderNav />
+          </Suspense>
 
           <span aria-hidden className="mx-1 h-4 w-px bg-line" />
 
@@ -40,7 +36,7 @@ export function SiteHeader({ email }: { email?: string }) {
           <form action="/auth/signout" method="post">
             <button
               type="submit"
-              className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-1.5 text-ink-dim transition-colors hover:bg-muted hover:text-ink"
+              className="inline-flex items-center gap-1.5 rounded-[9px] px-2.5 py-1.5 text-ink-dim transition-colors hover:bg-muted hover:text-ink"
             >
               <LogOut size={15} />
               <span className="hidden sm:inline">Logga ut</span>

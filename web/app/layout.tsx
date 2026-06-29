@@ -1,18 +1,19 @@
 import type { Metadata } from "next";
-import { Hanken_Grotesk, JetBrains_Mono } from "next/font/google";
+import { Schibsted_Grotesk, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-// Nordic look: Hanken Grotesk carries both body and display (headlines = weight 700, tight tracking);
-// JetBrains Mono carries Trend Score, metrics and labels. --font-display maps to --font-sans in CSS.
-const sans = Hanken_Grotesk({
+// Nordic, editorial look: Schibsted Grotesk carries both body and display (headlines = weight 700,
+// tight tracking); Geist Mono carries the Trend Score, metrics and labels. --font-display maps to
+// --font-sans in CSS (@theme inline), so the single sans face powers both facets.
+const sans = Schibsted_Grotesk({
   variable: "--font-sans",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
 });
-const mono = JetBrains_Mono({
+const mono = Geist_Mono({
   variable: "--font-mono",
   subsets: ["latin"],
-  weight: ["400", "500", "600", "700", "800"],
+  weight: ["400", "500", "600"],
 });
 
 export const metadata: Metadata = {

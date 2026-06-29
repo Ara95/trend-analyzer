@@ -116,7 +116,7 @@ export default async function CreatorPage({ params }: { params: Params }) {
           {stats.maxOutlier != null && stats.maxOutlier > 1 && (
             <Stat label="Största avvikelse" value={`${Math.round(stats.maxOutlier)}× snittet`} accent />
           )}
-          {stats.bestWindow && <Stat label="Bästa tid" value={stats.bestWindow} />}
+          {stats.bestWindow && <Stat label="Bästa publiceringstid" value={stats.bestWindow} />}
         </div>
       </section>
 

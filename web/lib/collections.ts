@@ -33,7 +33,6 @@ export interface SaveItemInput {
   comments: number;
   shares: number;
   engagementRate?: number;
-  trendScore?: number;
   isBreakout: boolean;
   postedAt?: string;
 }
@@ -57,7 +56,6 @@ function mapItem(row: Record<string, unknown>): SavedItem {
     comments: n(row.comments),
     shares: n(row.shares),
     engagementRate: row.engagement_rate == null ? undefined : Number(row.engagement_rate),
-    trendScore: row.trend_score == null ? undefined : Number(row.trend_score),
     isBreakout: Boolean(row.is_breakout),
   };
 }

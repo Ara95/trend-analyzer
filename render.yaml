@@ -1,0 +1,38 @@
+# Render Blueprint — trend-analyzer
+#
+# Defines the engine's on-demand search worker as a Render Background Worker.
+# This is the ONLY engine process the web app needs at runtime: it drains the
+# `searches` queue (rows the web marks `pending`), scrapes the term via Apify,
+# folds the results into the video index, scores + embeds them, marks `ready`.
+# Everything else in engine/ (collect / discover / worker / rescore) is an
+# operator-run batch job and does NOT belong here.
+#
+# Setup: connect this repo in Render → "New +" → "Blueprint". Render reads this
+# file from the repo root. Then fill in the secret env vars (marked sync:false)
+# in the dashboard. See engine/DEPLOY.md for the full walkthrough.
+
+services:
+  - type: worker # Background Worker: no port, no HTTP — just the poll loop.
+    name: trend-engine-search
+    runtime: node
+    rootDir: engine # build + start run inside engine/, not the repo root.
+    plan: starter # Background Workers require a paid plan (no free tier).
+    region: frankfurt # closest to a Swedish audience; change if your DB is elsewhere.
+    numInstances: 1 # MUST stay 1 — the queue claim is not atomic (single-worker by design).
+    autoDeploy: true
+    buildCommand: npm install
+    startCommand: npm run serve:searches
+    envVars:
+      # --- Required (set the values in the Render dashboard) ---
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: APIFY_TOKEN
+        sync: false
+      # --- Optional: enables hybrid/semantic search embeddings. Leave unset for lexical-only. ---
+      - key: OPENAI_API_KEY
+        sync: false
+      # --- Pin the Node major to match engine's "engines" field. ---
+      - key: NODE_VERSION
+        value: "20"

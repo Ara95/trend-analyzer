@@ -1,4 +1,4 @@
-import 'dotenv/config'; // load .env before loadEnv() reads it
+import '../config/load-dotenv.js';
 import type { AccountSignals, ContentSnapshot } from '../adapters/contract.js';
 import { loadEnv } from '../config/env.js';
 import { ALL_INDUSTRIES } from '../config/industries.js';

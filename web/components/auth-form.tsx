@@ -3,6 +3,7 @@
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { AlertCircle } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 import { Button } from "@/components/ui/button";
 
@@ -55,7 +56,7 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full rounded-[10px] border border-line bg-white px-3 py-2 text-sm text-ink outline-none transition-colors focus:border-signal focus:ring-4 focus:ring-signal-soft"
+          className="w-full rounded-[11px] border border-input bg-white px-3 py-2.5 text-sm text-ink outline-none transition-[colors,box-shadow] focus:border-signal focus:ring-4 focus:ring-signal-soft"
           placeholder="du@exempel.se"
         />
       </div>
@@ -72,7 +73,7 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
           minLength={6}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full rounded-[10px] border border-line bg-white px-3 py-2 text-sm text-ink outline-none transition-colors focus:border-signal focus:ring-4 focus:ring-signal-soft"
+          className="w-full rounded-[11px] border border-input bg-white px-3 py-2.5 text-sm text-ink outline-none transition-[colors,box-shadow] focus:border-signal focus:ring-4 focus:ring-signal-soft"
           placeholder="••••••••"
         />
         {isRegister && (
@@ -81,7 +82,10 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
       </div>
 
       {error && (
-        <p className="rounded-lg bg-destructive/10 px-3 py-2 text-sm text-destructive">{error}</p>
+        <p className="flex items-center gap-2 rounded-[10px] border border-[#ebcdc8] bg-[#f8eae7] px-3 py-2.5 text-sm text-fall">
+          <AlertCircle size={15} className="shrink-0" aria-hidden />
+          {error}
+        </p>
       )}
 
       <Button type="submit" size="lg" className="w-full" disabled={pending}>
@@ -92,14 +96,14 @@ export function AuthForm({ mode }: { mode: "login" | "register" }) {
         {isRegister ? (
           <>
             Har du redan ett konto?{" "}
-            <Link href="/login" className="font-medium text-ink hover:underline">
+            <Link href="/login" className="font-semibold text-signal hover:underline">
               Logga in
             </Link>
           </>
         ) : (
           <>
             Inget konto?{" "}
-            <Link href="/register" className="font-medium text-ink hover:underline">
+            <Link href="/register" className="font-semibold text-signal hover:underline">
               Registrera
             </Link>
           </>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { AuthForm } from "@/components/auth-form";
+import { OrbitMark } from "@/components/orbit-mark";
 
 export const metadata: Metadata = {
   title: "Logga in — Orbit",
@@ -7,17 +8,18 @@ export const metadata: Metadata = {
 
 export default function LoginPage() {
   return (
-    <main className="grid min-h-full place-items-center px-5 py-16">
+    <main className="hero-wash grid min-h-full place-items-center px-5 py-16">
       <div className="w-full max-w-sm">
-        <div className="mb-8 text-center">
-          <h1 className="font-display text-4xl font-bold tracking-tight text-ink">
-            Orbit<span className="ml-0.5 inline-block size-1.5 rounded-full bg-signal align-middle" aria-hidden />
+        <div className="mb-6 text-center">
+          <OrbitMark size={34} className="mx-auto text-ink" />
+          <h1 className="mt-2 font-display text-2xl font-bold tracking-[-0.025em] text-ink">
+            Orbit
           </h1>
           <p className="mt-2 text-sm text-muted-foreground">
             Logga in för att söka och spara inspiration.
           </p>
         </div>
-        <div className="rounded-2xl border border-line bg-card p-6 shadow-[0_8px_30px_-12px_rgba(0,0,0,0.12)]">
+        <div className="rounded-2xl border border-line bg-card p-6 shadow-[0_18px_44px_-22px_rgba(60,45,30,0.25)]">
           <AuthForm mode="login" />
         </div>
       </div>

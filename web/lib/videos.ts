@@ -28,7 +28,7 @@ const PERIOD_DAYS: Record<string, number> = { day: 1, week: 7, month: 30 };
 const VIDEO_COLS =
   "id, platform, platform_video_id, creator_handle, caption, hashtags, url, thumbnail_url, " +
   "posted_at, language, duration_seconds, views, likes, comments, shares, " +
-  "engagement_rate, trend_score, outlier_ratio, is_breakout, views_per_day, views_growth_pct";
+  "engagement_rate, outlier_ratio, is_breakout, views_per_day, views_growth_pct";
 
 function client(): SupabaseClient | null {
   const url = process.env.SUPABASE_URL;
@@ -65,7 +65,6 @@ function mapRow(row: Record<string, unknown>): VideoResult {
     comments: n(row.comments),
     shares: n(row.shares),
     engagementRate: row.engagement_rate == null ? undefined : Number(row.engagement_rate),
-    trendScore: row.trend_score == null ? undefined : Number(row.trend_score),
     outlierRatio: row.outlier_ratio == null ? undefined : Number(row.outlier_ratio),
     isBreakout: Boolean(row.is_breakout),
     viewsPerDay: row.views_per_day == null ? undefined : Number(row.views_per_day),
@@ -74,10 +73,10 @@ function mapRow(row: Record<string, unknown>): VideoResult {
 }
 
 // Apply the user's sort to a videos query. The raw-metric sorts (views/likes/comments/shares) order by
-// the absolute column; "engagement" by the computed rate; "recent" newest-first; "trend" (the default /
-// relevance sort) by trend_score with a views tiebreaker. nullsFirst:false keeps un-scored / undated
-// rows at the bottom. Generic over any builder whose .order() returns itself (Postgrest does), so it
-// chains onto a filter or a text-search builder identically.
+// the absolute column; "engagement" by the computed rate; "recent" newest-first; "trend" (relevance)
+// falls back to views for browse. nullsFirst:false keeps undated rows at the bottom. Generic over any
+// builder whose .order() returns itself (Postgrest does), so it chains onto a filter or a text-search
+// builder identically.
 interface Sortable<T> {
   order(column: string, options: { ascending: boolean; nullsFirst?: boolean }): T;
 }
@@ -100,14 +99,11 @@ function applySort<T extends Sortable<T>>(q: T, sort: SearchSort): T {
     case "recent":
       return q.order("posted_at", { ascending: false, nullsFirst: false });
     default:
-      return q
-        .order("trend_score", { ascending: false, nullsFirst: false })
-        .order("views", { ascending: false });
+      return q.order("views", { ascending: false });
   }
 }
 
-// Browse — no query text. Honors the sort control (trend_score is null until engine step 2 fills it,
-// so the default keeps a views tiebreaker).
+// Browse — no query text. Honors the sort control.
 async function browse(
   supabase: SupabaseClient,
   query: VideoSearchQuery,
@@ -124,7 +120,7 @@ async function browse(
   return (data as unknown as Record<string, unknown>[]).map(mapRow);
 }
 
-// Lexical FTS — query present, ordered by the chosen sort (defaults to trend_score). Serves two roles:
+// Lexical FTS — query present, ordered by the chosen sort. Serves two roles:
 // the graceful fallback when there's no embedding, AND the path for any explicit metric sort, since
 // "most-liked videos for X" wants the term's whole matching set ordered by the metric, not an RRF
 // relevance blend. source_query is folded into caption_tsv (migration 0009), so the FTS filter matches

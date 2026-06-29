@@ -1,4 +1,4 @@
-import 'dotenv/config'; // load .env before loadEnv() reads it
+import '../config/load-dotenv.js';
 import { loadEnv } from '../config/env.js';
 import { createSupabase } from '../store/supabase.js';
 import { upsertIndustryVector } from '../store/classification.js';
