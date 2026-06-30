@@ -23,6 +23,7 @@
     "probe:fresh-search": "tsx src/scripts/probe-fresh-search.ts",
     "discover": "tsx src/scripts/discover.ts",
     "build:industry-vectors": "tsx src/scripts/build-industry-vectors.ts",
+    "build": "tsc",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit"
